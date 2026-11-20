@@ -1,3 +1,5 @@
+#![cfg_attr(windows, windows_subsystem = "windows")]
+
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::io::{BufRead, BufReader};
