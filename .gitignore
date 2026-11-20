@@ -1,0 +1,18 @@
+# Build outputs
+target/
+node_modules/
+src-tauri/gen/
+
+# Downloaded engines (fetched by CI, >100MB each)
+*.exe
+*.zip
+
+# Update signing secrets — NEVER commit these
+.tauri/
+*.key
+signing-password.txt
+
+# Local tooling
+*.ps1
+*.zip
+*.log

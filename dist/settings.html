@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infallora Settings</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body class="settings-body">
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient-blob blob-a"></span>
+    <span class="ambient-blob blob-b"></span>
+    <span class="ambient-blob blob-c"></span>
+  </div>
+
+  <div class="settings-app">
+    <header class="settings-head">
+      <img class="settings-head-logo" src="logo.png" alt="">
+      <div>
+        <h1>Settings</h1>
+        <p>Saved on this PC only.</p>
+      </div>
+      <button id="closeBtn" class="icon-btn glass" type="button" aria-label="Close settings">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </header>
+
+    <nav class="settings-tabs" role="tablist" aria-label="Settings sections">
+      <button class="set-tab active" data-tab="general" type="button" role="tab" aria-selected="true">General</button>
+      <button class="set-tab" data-tab="formats" type="button" role="tab" aria-selected="false">Formats</button>
+      <button class="set-tab" data-tab="engine" type="button" role="tab" aria-selected="false">Engine</button>
+    </nav>
+
+    <main>
+      <section id="tab-general" class="set-panel" role="tabpanel">
+        <div class="set-card glass">
+          <h2>Appearance</h2>
+          <div class="set-row"><span>Theme</span></div>
+          <div class="set-chips" role="group" aria-label="Theme">
+            <button class="opt-chip" type="button" data-group="theme" data-value="system">System</button>
+            <button class="opt-chip" type="button" data-group="theme" data-value="light">Light</button>
+            <button class="opt-chip" type="button" data-group="theme" data-value="dark">Dark</button>
+          </div>
+        </div>
+        <div class="set-card glass">
+          <h2>Downloads</h2>
+          <label class="set-row" for="setFolder"><span>Default folder</span>
+            <input id="setFolder" class="glass-sub" type="text" placeholder="Leave blank for Downloads" spellcheck="false">
+          </label>
+          <div class="set-row"><span>Max concurrent</span></div>
+          <div class="set-chips" role="group" aria-label="Max concurrent">
+            <button class="opt-chip" type="button" data-group="concurrent" data-value="1">1</button>
+            <button class="opt-chip active" type="button" data-group="concurrent" data-value="3">3</button>
+            <button class="opt-chip" type="button" data-group="concurrent" data-value="4">4</button>
+            <button class="opt-chip" type="button" data-group="concurrent" data-value="6">6</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-formats" class="set-panel" role="tabpanel" hidden>
+        <div class="set-card glass">
+          <h2>Defaults</h2>
+          <div class="set-row"><span>Quality</span></div>
+          <div class="set-chips" role="group" aria-label="Default quality">
+            <button class="opt-chip active" type="button" data-group="quality" data-value="best">Auto</button>
+            <button class="opt-chip" type="button" data-group="quality" data-value="1080">1080p</button>
+            <button class="opt-chip" type="button" data-group="quality" data-value="720">720p</button>
+            <button class="opt-chip" type="button" data-group="quality" data-value="mp3">MP3</button>
+          </div>
+          <div class="set-row"><span>Container</span></div>
+          <div class="set-chips" role="group" aria-label="Default container">
+            <button class="opt-chip active" type="button" data-group="format" data-value="auto">Auto</button>
+            <button class="opt-chip" type="button" data-group="format" data-value="mp4">MP4</button>
+            <button class="opt-chip" type="button" data-group="format" data-value="webm">WebM</button>
+            <button class="opt-chip" type="button" data-group="format" data-value="mkv">MKV</button>
+          </div>
+          <div class="set-row"><span>Bitrate</span></div>
+          <div class="set-chips" role="group" aria-label="Default bitrate">
+            <button class="opt-chip active" type="button" data-group="bitrate" data-value="best">Auto</button>
+            <button class="opt-chip" type="button" data-group="bitrate" data-value="320">320k</button>
+            <button class="opt-chip" type="button" data-group="bitrate" data-value="128">128k</button>
+          </div>
+          <div class="set-row"><span>File name</span></div>
+          <div class="set-chips" role="group" aria-label="Filename style">
+            <button class="opt-chip active" type="button" data-group="filename" data-value="basic">Simple</button>
+            <button class="opt-chip" type="button" data-group="filename" data-value="pretty">Resolution</button>
+            <button class="opt-chip" type="button" data-group="filename" data-value="classic">Creator</button>
+            <button class="opt-chip" type="button" data-group="filename" data-value="nerdy">Details</button>
+          </div>
+          <label class="set-row" for="setSubtitle"><span>Subtitle language</span>
+            <input id="setSubtitle" class="glass-sub" type="text" placeholder="e.g. en" spellcheck="false">
+          </label>
+        </div>
+        <div class="set-card glass">
+          <h2>Behaviour</h2>
+          <button id="setMetadata" class="set-switch active" type="button" aria-pressed="true"><span>Embed metadata</span><i></i></button>
+          <button id="setPlaylist" class="set-switch" type="button" aria-pressed="false"><span>Download playlists</span><i></i></button>
+        </div>
+      </section>
+
+      <section id="tab-engine" class="set-panel" role="tabpanel" hidden>
+        <div class="set-card glass">
+          <h2>Engine</h2>
+          <label class="set-row" for="setExtra"><span>Extra yt-dlp args</span></label>
+          <input id="setExtra" class="glass-sub wide" type="text" placeholder="--no-warnings ..." spellcheck="false">
+          <p class="set-note">yt-dlp and ffmpeg are bundled. No telemetry, no uploads.</p>
+        </div>
+      </section>
+    </main>
+
+    <div class="settings-actions">
+      <button id="resetBtn" class="mini-btn" type="button">Reset</button>
+      <button id="saveBtn" class="primary-btn" type="button">Save settings</button>
+    </div>
+    <p id="setStatus" class="hint" role="status" aria-live="polite"></p>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
