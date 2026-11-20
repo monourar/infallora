@@ -6,6 +6,18 @@ use std::process::{Command, Stdio};
 use std::sync::{Arc, Condvar, Mutex};
 use tauri::{AppHandle, Manager, State};
 
+/// Build a command that never opens a visible console window on Windows.
+fn hidden_command(program: &str) -> Command {
+    let mut cmd = Command::new(program);
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        cmd.creation_flags(CREATE_NO_WINDOW);
+    }
+    cmd
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DownloadItem {
     id: u64,
@@ -132,6 +144,11 @@ fn find_ytdlp() -> Option<PathBuf> {
     let exe = std::env::current_exe().ok()?;
     let mut candidates = Vec::new();
     if let Some(dir) = exe.parent() {
+        // NSIS installs bundled resources under the _up_ folder
+        candidates.push(dir.join("_up_").join("yt-dlp.exe"));
+        candidates.push(dir.join("_up_").join("yt-dlp"));
+        candidates.push(dir.join("resources").join("yt-dlp.exe"));
+        candidates.push(dir.join("bin").join("yt-dlp.exe"));
         candidates.push(dir.join("yt-dlp.exe"));
         candidates.push(dir.join("yt-dlp"));
         if let Some(parent) = dir.parent() {
@@ -156,9 +173,20 @@ fn find_ffmpeg_dir(ytdlp: &Path) -> Option<String> {
             return Some(dir.to_string_lossy().into_owned());
         }
     }
-    let dir = ytdlp.parent()?;
-    if dir.join("ffmpeg.exe").exists() || dir.join("ffmpeg").exists() {
-        return Some(dir.to_string_lossy().into_owned());
+    if let Some(dir) = ytdlp.parent() {
+        if dir.join("ffmpeg.exe").exists() || dir.join("ffmpeg").exists() {
+            return Some(dir.to_string_lossy().into_owned());
+        }
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(base) = exe.parent() {
+            for sub in ["_up_", "resources", "bin", ""] {
+                let dir = if sub.is_empty() { base.to_path_buf() } else { base.join(sub) };
+                if dir.join("ffmpeg.exe").exists() || dir.join("ffmpeg").exists() {
+                    return Some(dir.to_string_lossy().into_owned());
+                }
+            }
+        }
     }
     None
 }
@@ -364,7 +392,7 @@ fn run_download(
         None => {
             update_item(&items, id, |i| {
                 i.status = "error".into();
-                i.message = "yt-dlp.exe not found. Put it next to Infallora.exe.".into();
+                i.message = "yt-dlp.exe not found. Reinstall Infallora or place it next to the app.".into();
             });
             return;
         }
@@ -401,7 +429,7 @@ fn run_download(
         g.active += 1;
     }
 
-    let mut child = match Command::new(&ytdlp)
+    let mut child = match hidden_command(&ytdlp.to_string_lossy())
         .args(&args)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -624,9 +652,9 @@ fn cancel_download(id: u64, state: State<'_, DownloadState>) {
         .and_then(|map| map.get(&id).copied());
     if let Some(pid) = pid {
         #[cfg(windows)]
-        let _ = Command::new("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).spawn();
+        let _ = hidden_command("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).spawn();
         #[cfg(not(windows))]
-        let _ = Command::new("kill").arg(pid.to_string()).spawn();
+        let _ = hidden_command("kill").arg(pid.to_string()).spawn();
     }
     update_item(&state.items, id, |i| {
         if i.status == "queued" || i.status == "downloading" {
@@ -646,9 +674,9 @@ fn cancel_all(state: State<'_, DownloadState>) {
         .unwrap_or_default();
     for pid in pids {
         #[cfg(windows)]
-        let _ = Command::new("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).spawn();
+        let _ = hidden_command("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).spawn();
         #[cfg(not(windows))]
-        let _ = Command::new("kill").arg(pid.to_string()).spawn();
+        let _ = hidden_command("kill").arg(pid.to_string()).spawn();
     }
     if let Ok(mut list) = state.items.lock() {
         for item in list.iter_mut() {
@@ -671,9 +699,9 @@ fn clear_finished(state: State<'_, DownloadState>) {
 #[tauri::command]
 fn open_path(path: String) {
     #[cfg(windows)]
-    let _ = Command::new("explorer").arg(&path).spawn();
+    let _ = hidden_command("explorer").arg(&path).spawn();
     #[cfg(not(windows))]
-    let _ = Command::new("xdg-open").arg(&path).spawn();
+    let _ = hidden_command("xdg-open").arg(&path).spawn();
 }
 
 fn settings_path() -> PathBuf {
@@ -786,7 +814,7 @@ fn clean_error(text: &str) -> String {
 
 fn preview_link_blocking(url: &str) -> Result<LinkPreview, String> {
     let ytdlp = find_ytdlp().ok_or_else(|| "yt-dlp.exe not found".to_string())?;
-    let output = Command::new(&ytdlp)
+    let output = hidden_command(&ytdlp.to_string_lossy())
         .args(["--js-runtimes", "node", "--dump-single-json", "--skip-download", "--no-playlist", "--no-warnings", url])
         .args(extra_cookie_args())
         .output()
@@ -821,7 +849,7 @@ async fn preview_link(url: String) -> Result<LinkPreview, String> {
 
 fn list_formats_blocking(url: &str) -> Result<Vec<FormatInfo>, String> {
     let ytdlp = find_ytdlp().ok_or_else(|| "yt-dlp.exe not found".to_string())?;
-    let output = Command::new(&ytdlp)
+    let output = hidden_command(&ytdlp.to_string_lossy())
         .args(["--js-runtimes", "node", "-F", "--no-playlist", "--no-warnings", url])
         .args(extra_cookie_args())
         .output()
@@ -957,7 +985,7 @@ fn playlist_duration(value: Option<&serde_json::Value>) -> String {
 
 fn list_playlist_blocking(url: &str) -> Result<Vec<PlaylistEntry>, String> {
     let ytdlp = find_ytdlp().ok_or_else(|| "yt-dlp.exe not found".to_string())?;
-    let output = Command::new(&ytdlp)
+    let output = hidden_command(&ytdlp.to_string_lossy())
         .args(["--js-runtimes", "node", "--flat-playlist", "--dump-single-json", "--skip-download", "--no-warnings", url])
         .args(extra_cookie_args())
         .output()
