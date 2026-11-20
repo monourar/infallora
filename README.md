@@ -152,7 +152,7 @@ The UI polls the Rust backend for progress, which keeps the implementation small
 ## FAQ
 
 **Why does Windows warn about the installer?**
-The app is not code-signed yet. A code-signing certificate is the next step. Verify you downloaded from this repository's Releases page.
+Infallora is not code-signed. Windows shows a SmartScreen warning for any unsigned app, even safe ones. Verify you downloaded from this repository's Releases page, then click **More info → Run anyway**. The installer is built on GitHub Actions and published with a signed update manifest.
 
 **Why does a video fail with 403?**
 YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, it is usually account-restricted — use a cookies file.
