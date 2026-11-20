@@ -311,7 +311,8 @@ function updateItem(el, item) {
 
 function updateIsland(items) {
   const island = $('island');
-  const active = items.find((i) => i.status === 'downloading') || items.find((i) => i.status === 'queued');
+  const running = items.filter((i) => i.status === 'downloading' || i.status === 'queued');
+  const active = running[0];
   if (!active) {
     island.hidden = true;
     return;
@@ -323,6 +324,36 @@ function updateIsland(items) {
   $('islandBar').style.width = `${pct}%`;
   $('islandSpeed').textContent = active.speed || t('island.waiting');
   $('islandEta').textContent = active.eta ? t('island.eta', { x: active.eta }) : '';
+
+  const badge = $('islandBadge');
+  badge.textContent = String(running.length);
+  badge.hidden = running.length < 2;
+
+  const queue = $('islandQueue');
+  queue.innerHTML = '';
+  running.slice(0, 3).forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'island-queue-item';
+    const name = document.createElement('span');
+    name.textContent = item.title || item.url;
+    name.title = item.title || item.url;
+    const pctLabel = document.createElement('small');
+    pctLabel.textContent = item.status === 'queued' ? t('island.queued') : `${Math.round(item.percent || 0)}%`;
+    const bar = document.createElement('div');
+    bar.className = 'island-queue-bar';
+    const fill = document.createElement('i');
+    fill.style.width = `${Math.max(0, Math.min(100, item.percent || 0))}%`;
+    bar.appendChild(fill);
+    row.append(name, pctLabel, bar);
+    queue.appendChild(row);
+  });
+}
+
+function showIslandAlert() {
+  const island = $('island');
+  if (island.hidden) return;
+  $('islandAlert').hidden = false;
+  window.setTimeout(() => { $('islandAlert').hidden = true; }, 5000);
 }
 
 function render(items) {
@@ -347,6 +378,7 @@ function render(items) {
     updateItem(el, item);
     const previous = lastStatus.get(item.id);
     if (previous !== item.status && (item.status === 'done' || item.status === 'error')) {
+      showIslandAlert();
       const needsSignIn = item.status === 'error' && /Video unavailable/i.test(item.message || '');
       toast(
         needsSignIn ? t('toast.signIn') : (item.status === 'done' ? t('toast.finished', { title: item.title }) : t('toast.failed', { title: item.title })),
@@ -457,12 +489,35 @@ document.querySelectorAll('.primary-btn, .seg, .icon-btn, .island-main, .text-bt
   bindPress(el, lens);
 });
 
-$('islandToggle').addEventListener('click', () => {
+function setIslandExpanded(next) {
   const island = $('island');
-  const next = island.dataset.expanded !== 'true';
   island.dataset.expanded = String(next);
   $('islandToggle').setAttribute('aria-expanded', String(next));
   $('islandDetail').setAttribute('aria-hidden', String(!next));
+  if (next) $('islandAlert').hidden = true;
+}
+
+$('islandToggle').addEventListener('click', () => {
+  if (window.__islandLongPressed) {
+    window.__islandLongPressed = false;
+    return;
+  }
+  setExpandedToggle();
+});
+
+function setExpandedToggle() {
+  setIslandExpanded($('island').dataset.expanded !== 'true');
+}
+
+let islandPressTimer = 0;
+$('islandToggle').addEventListener('pointerdown', () => {
+  islandPressTimer = window.setTimeout(() => {
+    window.__islandLongPressed = true;
+    setIslandExpanded(true);
+  }, 320);
+});
+['pointerup', 'pointerleave', 'pointercancel'].forEach((evt) => {
+  $('islandToggle').addEventListener(evt, () => window.clearTimeout(islandPressTimer));
 });
 
 $('downloadBtn').addEventListener('click', startDownload);

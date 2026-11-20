@@ -1,5 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
+  const VERSION = window.INFALLORA_VERSION || '0.2.2';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -95,7 +96,7 @@
     'nav.advanced': { en: 'advanced', ar: 'متقدم' },
     'nav.updates': { en: 'updates', ar: 'التحديثات' },
     'nav.about': { en: 'about', ar: 'حول' },
-    'set.version': { en: 'v0.2.1 · local', ar: 'v0.2.1 · محلي' },
+    'set.version': { en: 'v{v} · local', ar: 'v{v} · محلي' },
     'set.version-suffix': { en: 'local', ar: 'محلي' },
     'set.language': { en: 'language', ar: 'اللغة' },
     'set.system': { en: 'system', ar: 'النظام' },
@@ -160,14 +161,14 @@
 
     // settings updates
     'set.appUpdates': { en: 'app updates', ar: 'تحديثات التطبيق' },
-    'set.currentVersion': { en: 'Current version: 0.2.1', ar: 'الإصدار الحالي: 0.2.1' },
+    'set.currentVersion': { en: 'Current version: {v}', ar: 'الإصدار الحالي: {v}' },
     'set.checkStartup': { en: 'check on startup', ar: 'الفحص عند التشغيل' },
     'set.checkNow': { en: 'check for updates', ar: 'البحث عن تحديثات' },
     'set.notChecked': { en: 'Not checked yet.', ar: 'لم يتم الفحص بعد.' },
     'set.install': { en: 'download & install', ar: 'تنزيل وتثبيت' },
 
     // settings about / actions
-    'set.aboutApp': { en: 'A local video downloader built with Rust, Tauri, yt-dlp and ffmpeg. Version 0.2.1. No account, no telemetry, no cloud.', ar: 'مُحمِّل فيديو محلي مبني بـ Rust و Tauri و yt-dlp و ffmpeg. الإصدار 0.2.1. لا حساب، لا قياسات، لا سحابة.' },
+    'set.aboutApp': { en: 'A local video downloader built with Rust, Tauri, yt-dlp and ffmpeg. Version {v}. No account, no telemetry, no cloud.', ar: 'مُحمِّل فيديو محلي مبني بـ Rust و Tauri و yt-dlp و ffmpeg. الإصدار {v}. لا حساب، لا قياسات، لا سحابة.' },
     'set.aboutEngine': { en: 'It uses yt-dlp under the hood, so it supports thousands of video and social sites.', ar: 'يستخدم yt-dlp في الخلفية، لذا يدعم آلاف مواقع الفيديو والتواصل الاجتماعي.' },
     'set.aboutCookies': { en: 'For private or members-only videos, export cookies.txt from your signed-in browser and place it next to Infallora.exe. Infallora picks it up automatically — no setup needed for public videos.', ar: 'للفيديوهات الخاصة أو الحصرية للأعضاء، صدّر cookies.txt من متصفحك بعد تسجيل الدخول وضعه بجوار Infallora.exe. ستلتقطه إنفالورا تلقائيًا — لا إعداد مطلوب للفيديوهات العامة.' },
     'set.worksWith': { en: 'works with', ar: 'يعمل مع' },
@@ -220,7 +221,7 @@
     document.documentElement.dataset.language = lang;
 
     root.querySelectorAll('[data-i18n]').forEach((el) => {
-      const translated = t(el.dataset.i18n);
+      const translated = t(el.dataset.i18n, { v: VERSION });
       let replaced = false;
       for (const node of el.childNodes) {
         if (node.nodeType !== 3 || !node.textContent.trim()) continue;
