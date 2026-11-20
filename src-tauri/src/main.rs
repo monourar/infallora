@@ -61,6 +61,7 @@ pub struct AppSettings {
     write_thumbnail: bool,
     cookies_file: String,
     auto_update: bool,
+    language: String,
 }
 
 impl Default for AppSettings {
@@ -85,6 +86,7 @@ impl Default for AppSettings {
             write_thumbnail: false,
             cookies_file: String::new(),
             auto_update: true,
+            language: "system".into(),
         }
     }
 }

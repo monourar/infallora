@@ -24,6 +24,7 @@ const state = {
   cookies_file: '',
   extra_args: '',
   auto_update: true,
+  language: 'system',
 };
 
 function applyTheme(theme) {
@@ -109,6 +110,7 @@ function fill(settings) {
   setSeg('concurrent', state.max_concurrent);
   setSeg('saving', state.saving_method);
   setSeg('autoUpdate', state.auto_update ? 'on' : 'off');
+  setSeg('language', state.language || 'system');
   setToggle('reduceMotion', state.reduce_motion);
   setToggle('h265', state.allow_h265);
   setToggle('metadata', state.metadata);
@@ -141,6 +143,7 @@ function collect() {
     max_concurrent: state.max_concurrent,
     extra_args: $('extraArgs').value.trim(),
     auto_update: state.auto_update,
+    language: state.language,
   };
 }
 
@@ -149,9 +152,15 @@ document.querySelectorAll('.set-nav-item').forEach((item) => {
     document.querySelectorAll('.set-nav-item').forEach((n) => n.classList.remove('active'));
     document.querySelectorAll('.set-section').forEach((s) => s.classList.remove('active'));
     item.classList.add('active');
-    $('setHeading').textContent = item.dataset.section;
+    $('setHeading').textContent = window.I18n.t(`nav.${item.dataset.section}`);
+    $('setHeading').dataset.i18n = `nav.${item.dataset.section}`;
     $(`section-${item.dataset.section}`).classList.add('active');
   });
+});
+
+window.addEventListener('infallora:languagechange', () => {
+  const active = document.querySelector('.set-nav-item.active');
+  if (active) $('setHeading').textContent = window.I18n.t(`nav.${active.dataset.section}`);
 });
 
 document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
@@ -174,6 +183,10 @@ document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
     if (group === 'concurrent') state.max_concurrent = Number(value);
     if (group === 'saving') state.saving_method = value;
     if (group === 'autoUpdate') state.auto_update = value === 'on';
+    if (group === 'language') {
+      state.language = value;
+      window.I18n.setLanguage(value);
+    }
   });
 });
 
@@ -225,7 +238,7 @@ $('closeBtn').addEventListener('click', () => {
 $('saveBtn').addEventListener('click', async () => {
   try {
     await invoke('set_settings', { settings: collect() });
-    $('setStatus').textContent = 'Saved on this PC.';
+    $('setStatus').textContent = window.I18n.t('set.saved');
   } catch (e) {
     $('setStatus').textContent = String(e);
   }
@@ -235,15 +248,17 @@ $('resetBtn').addEventListener('click', () => {
   fill({
     theme: 'system', reduce_motion: false, quality: 'best', codec: 'h264', format: 'auto',
     allow_h265: false, bitrate: 'best', audio_format: 'mp3', filename_style: 'basic',
-    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true,
+    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system',
   });
-  $('setStatus').textContent = 'Defaults restored. Save to keep.';
+  window.I18n.setLanguage('system');
+  $('setStatus').textContent = window.I18n.t('set.restored');
 });
 
 (async function init() {
   try {
     const settings = await invoke('get_settings');
     fill(settings || state);
+    if (settings && settings.language) window.I18n.setLanguage(settings.language);
   } catch (_) {
     fill(state);
   }

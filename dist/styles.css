@@ -206,7 +206,7 @@ input, select { caret-color: var(--accent); }
   background: none;
   color: var(--ink);
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   border-radius: inherit;
 }
@@ -414,7 +414,7 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
   color: var(--ink);
   font: inherit;
   font-size: 13px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition: background var(--motion), box-shadow var(--motion);
 }
@@ -477,7 +477,7 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
   color: var(--ink);
   font: inherit;
   font-size: 13px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition: background var(--motion), color var(--motion);
 }
@@ -491,15 +491,15 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
 .option-check { width: 15px; height: 15px; color: var(--accent); }
 
 .input-wrap { position: relative; }
-.input-wrap input { padding-left: 39px; padding-right: 46px; }
+.input-wrap input { padding-inline-start: 39px; padding-inline-end: 46px; }
 .input-icon {
-  position: absolute; left: 13px; top: 50%;
+  position: absolute; inset-inline-start: 13px; top: 50%;
   transform: translateY(-50%);
   color: var(--ink-muted);
   pointer-events: none;
 }
 .input-action {
-  position: absolute; right: 6px; top: 6px;
+  position: absolute; inset-inline-end: 6px; top: 6px;
   width: 34px; height: 34px;
   display: grid; place-items: center;
   border: none; border-radius: 10px;
@@ -528,7 +528,7 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
   position: absolute;
   top: 4px;
   bottom: 4px;
-  left: 4px;
+  inset-inline-start: 4px;
   width: calc((100% - 16px) / 4);
   border-radius: 12px;
   background: var(--glass-strong);
@@ -588,7 +588,7 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
 .primary-btn.is-loading .btn-icon { display: none; }
 .primary-btn.is-loading .spinner {
   display: block; width: 15px; height: 15px;
-  border: 2px solid currentColor; border-right-color: transparent;
+  border: 2px solid currentColor; border-inline-end-color: transparent;
   border-radius: 50%; animation: spin .7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -788,7 +788,7 @@ footer {
   background: transparent;
   color: var(--ink);
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
 .playlist-item:hover { background: var(--glass-field); }
@@ -850,7 +850,7 @@ footer {
   width: 14px; height: 14px;
   margin: -7px 0 0 -7px;
   border: 2px solid var(--accent);
-  border-right-color: transparent;
+  border-inline-end-color: transparent;
   border-radius: 50%;
   animation: spin .7s linear infinite;
 }
@@ -883,7 +883,7 @@ footer {
   color: var(--ink);
   font: inherit;
   font-size: 12px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
 .format-row:hover { background: var(--glass-field); }
@@ -984,3 +984,41 @@ footer {
   .island:hover, .primary-btn:hover, .icon-btn:hover,
   .island.is-lens, .segmented.is-lens .seg-thumb, .seg.is-lens .icon { transform: none; }
 }
+
+/* ---------- Arabic / RTL ---------- */
+html[dir="rtl"] {
+  font-family: "Segoe UI", "Tahoma", "Noto Sans Arabic", "Geeza Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  word-spacing: 0.05em;
+}
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] .brand-text h1,
+html[dir="rtl"] .panel-head h2,
+html[dir="rtl"] .section-head h2,
+html[dir="rtl"] .set-side-head strong,
+html[dir="rtl"] .set-content-head h2 {
+  letter-spacing: normal;
+  line-height: 1.35;
+}
+html[dir="rtl"] .seg-thumb { transform: translateX(0); }
+html[dir="rtl"] .segmented[data-index="1"] .seg-thumb { transform: translateX(calc(-100% - 4px)); }
+html[dir="rtl"] .segmented[data-index="2"] .seg-thumb { transform: translateX(calc(-200% - 8px)); }
+html[dir="rtl"] .segmented[data-index="3"] .seg-thumb { transform: translateX(calc(-300% - 12px)); }
+html[dir="rtl"] .chevron { transform: scaleX(-1); }
+html[dir="rtl"] .island-detail > span { flex-direction: row; }
+
+/* URLs, file paths and codes stay LTR inside an RTL interface */
+html[dir="rtl"] #urlInput,
+html[dir="rtl"] #dirInput,
+html[dir="rtl"] #cookiesFile,
+html[dir="rtl"] #extraArgs,
+html[dir="rtl"] #subtitleLang {
+  direction: ltr;
+  text-align: right;
+}
+
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+

@@ -16,6 +16,8 @@ Everything runs on your PC: no account, no telemetry, no cloud, no upload.
 - Persistent settings in `%APPDATA%\Infallora\settings.json`
 - Self-updater: **Settings → updates**, with an optional startup check. Updates
   are signed and delivered through GitHub Releases. See `RELEASING.md`.
+- Full English/Arabic localization with automatic RTL layout. Choose the
+  language in **Settings → appearance → language** (system / English / العربية).
 
 ## Run it
 

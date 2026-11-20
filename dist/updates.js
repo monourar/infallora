@@ -3,6 +3,7 @@
   if (!internals) return;
   const invoke = (cmd, args = {}) => internals.invoke(cmd, args);
   const $ = (id) => document.getElementById(id);
+  const t = (key, vars) => window.I18n.t(key, vars);
 
   let pendingUpdate = null;
   let busy = false;
@@ -42,21 +43,21 @@
     pendingUpdate = null;
     const btn = $('checkUpdateBtn');
     if (btn) btn.disabled = true;
-    if (announce) status('Checking for updates…');
+    if (announce) status(t('update.checking'));
     try {
       const update = await invoke('plugin:updater|check');
       if (!update) {
-        status('You are up to date.');
+        status(t('update.current'));
         const install = $('installUpdateBtn');
         if (install) install.hidden = true;
         return;
       }
       pendingUpdate = update;
-      status(`Version ${update.version} is available (you have ${update.currentVersion}).`);
+      status(t('update.available', { v: update.version, c: update.currentVersion }));
       const install = $('installUpdateBtn');
       if (install) install.hidden = false;
     } catch (e) {
-      status(`Update check failed: ${String(e)}`, true);
+      status(t('update.checkFailed', { e: String(e) }), true);
     } finally {
       busy = false;
       if (btn) btn.disabled = false;
@@ -69,7 +70,7 @@
     const install = $('installUpdateBtn');
     if (install) install.disabled = true;
     showProgress(true);
-    status('Downloading update…');
+    status(t('update.downloading'));
     let received = 0;
     let total = 0;
     const channel = new ProgressChannel((msg) => {
@@ -83,9 +84,9 @@
           const pct = total ? Math.min(100, Math.round((received / total) * 100)) : 0;
           fill.style.width = `${pct}%`;
         }
-        status(`Downloading update… ${total ? `${Math.round((received / total) * 100)}%` : ''}`);
+        status(`${t('update.downloading')} ${total ? `${Math.round((received / total) * 100)}%` : ''}`);
       } else if (msg.event === 'finished') {
-        status('Installing…');
+        status(t('update.installing'));
       }
     });
     try {
@@ -94,9 +95,9 @@
         onEvent: channel,
         restartAfterInstall: true,
       });
-      status('Update installed. Restarting…');
+      status(t('update.installed'));
     } catch (e) {
-      status(`Install failed: ${String(e)}`, true);
+      status(t('update.installFailed', { e: String(e) }), true);
       showProgress(false);
     } finally {
       busy = false;
@@ -119,4 +120,8 @@
       /* settings unavailable; skip auto-check */
     }
   })();
+
+  window.addEventListener('infallora:languagechange', () => {
+    if (!busy && !pendingUpdate) status(t('set.notChecked'));
+  });
 })();

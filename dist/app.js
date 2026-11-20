@@ -4,6 +4,7 @@ const invoke = internals
   : async () => { throw new Error('Tauri bridge unavailable'); };
 
 const $ = (id) => document.getElementById(id);
+const t = (key, vars) => window.I18n.t(key, vars);
 
 const QUALITY_OPTIONS = {
   video: [
@@ -81,7 +82,7 @@ let openSelect = null;
 
 function labelFor(options, value) {
   const match = options.find(([v]) => v === value);
-  return match ? match[1] : value;
+  return match ? window.I18n.translateText(match[1]) : value;
 }
 
 function formatIcon(kind) {
@@ -127,7 +128,8 @@ function fillSelect(spec) {
     opt.dataset.value = value;
     opt.setAttribute('aria-selected', String(value === getSelected()));
     const text = document.createElement('span');
-    text.textContent = label;
+    text.textContent = window.I18n.translateText(label);
+    text.dataset.i18nRaw = label;
     opt.appendChild(text);
     if (value === getSelected()) opt.appendChild(checkIcon());
     opt.addEventListener('click', () => onSelect(value));
@@ -269,15 +271,15 @@ function updateItem(el, item) {
   el.querySelector('.item-title').textContent = title;
 
   const chip = el.querySelector('.chip');
-  chip.textContent = status;
+  chip.textContent = t(`status.${status}`);
   chip.className = `chip ${status.replace(/[^a-z]/g, '')}`;
 
   const meta = [];
   if (status === 'downloading' || status === 'queued') meta.push(`${pct}%`);
   if (item.speed) meta.push(item.speed);
-  if (item.eta) meta.push(`ETA ${item.eta}`);
-  if (status === 'done') meta.push('Finished');
-  if (status === 'canceled') meta.push('Canceled');
+  if (item.eta) meta.push(t('island.eta', { x: item.eta }));
+  if (status === 'done') meta.push(t('status.Finished'));
+  if (status === 'canceled') meta.push(t('status.Canceled'));
   el.querySelector('.meta-text').textContent = meta.join('  ·  ');
 
   const msg = el.querySelector('.item-msg');
@@ -299,10 +301,10 @@ function updateItem(el, item) {
     const actions = el.querySelector('.item-actions');
     actions.innerHTML = '';
     if (item.path && (status === 'done' || status === 'error')) {
-      actions.appendChild(makeButton('open', item.id, 'Open file'));
+      actions.appendChild(makeButton('open', item.id, t('action.openFile')));
     }
     if (status === 'downloading' || status === 'queued') {
-      actions.appendChild(makeButton('cancel', item.id, 'Cancel'));
+      actions.appendChild(makeButton('cancel', item.id, t('action.cancel')));
     }
   }
 }
@@ -317,10 +319,10 @@ function updateIsland(items) {
   island.hidden = false;
   const pct = Math.max(0, Math.min(100, Math.round(active.percent || 0)));
   $('islandTitle').textContent = active.title || active.url;
-  $('islandMeta').textContent = active.status === 'queued' ? 'Queued' : `${pct}%`;
+  $('islandMeta').textContent = active.status === 'queued' ? t('island.queued') : `${pct}%`;
   $('islandBar').style.width = `${pct}%`;
-  $('islandSpeed').textContent = active.speed || 'Waiting';
-  $('islandEta').textContent = active.eta ? `ETA ${active.eta}` : '';
+  $('islandSpeed').textContent = active.speed || t('island.waiting');
+  $('islandEta').textContent = active.eta ? t('island.eta', { x: active.eta }) : '';
 }
 
 function render(items) {
@@ -347,10 +349,10 @@ function render(items) {
     if (previous !== item.status && (item.status === 'done' || item.status === 'error')) {
       const needsSignIn = item.status === 'error' && /Video unavailable/i.test(item.message || '');
       toast(
-        needsSignIn ? 'This video needs YouTube sign-in' : (item.status === 'done' ? `${item.title} finished` : `${item.title} failed`),
+        needsSignIn ? t('toast.signIn') : (item.status === 'done' ? t('toast.finished', { title: item.title }) : t('toast.failed', { title: item.title })),
         item.status === 'error',
         item.status === 'done' ? item.id : null,
-        needsSignIn ? 'Set cookies' : null,
+        needsSignIn ? t('toast.setCookies') : null,
         needsSignIn ? openSettingsCookies : null
       );
     }
@@ -373,7 +375,7 @@ async function poll() {
 async function startDownload() {
   const url = $('urlInput').value.trim();
   if (!url) {
-    setHint('Paste a link first.', true);
+    setHint(t('hint.pasteFirst'), true);
     setUrlError(true);
     $('urlInput').focus();
     return;
@@ -384,7 +386,7 @@ async function startDownload() {
   const quality = qualityValue;
   const format = mode === 'video' ? formatValue : 'auto';
   if (playlistValue && playlistEntries.length && playlistSelected.size === 0) {
-    setHint('Select at least one video from the playlist.', true);
+    setHint(t('hint.selectPlaylist'), true);
     return;
   }
   const btn = $('downloadBtn');
@@ -422,7 +424,7 @@ async function startDownload() {
       }));
     } else {
       const previewLabel = $('previewTitle').textContent.trim();
-      const label = previewLabel && !/^(Loading|Playlist)/.test(previewLabel) ? previewLabel : '';
+      const label = previewLabel && $('previewTitle').dataset.placeholder !== '1' ? previewLabel : '';
       await invoke('start_download', { ...common, url, playlist: playlistValue, label });
     }
     $('urlInput').value = '';
@@ -430,7 +432,7 @@ async function startDownload() {
     $('playlistPanel').hidden = true;
     playlistEntries = [];
     playlistSelected.clear();
-    setHint(added > 1 ? `${added} downloads added.` : 'Added to downloads.');
+    setHint(added > 1 ? t('hint.added', { n: added }) : t('hint.addedOne'));
     poll();
   } catch (e) {
     setHint(String(e), true);
@@ -443,7 +445,7 @@ async function startDownload() {
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   const btn = $('themeToggle');
-  const label = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  const label = theme === 'dark' ? t('theme.toLight') : t('theme.toDark');
   btn.setAttribute('aria-label', label);
   btn.title = label;
 }
@@ -478,11 +480,11 @@ $('pasteBtn').addEventListener('click', async () => {
     if (text) {
       $('urlInput').value = text.trim();
       setUrlError(false);
-      setHint('Link pasted.');
+      setHint(t('hint.pasted'));
       schedulePreview();
     }
   } catch (_) {
-    setHint('Clipboard blocked. Click the field and press Ctrl+V.', true);
+    setHint(t('hint.clipboard'), true);
     $('urlInput').focus();
   }
 });
@@ -536,7 +538,7 @@ function toast(message, isError, id, actionLabel, action) {
   if (id) {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.textContent = 'Open';
+    btn.textContent = t('action.open');
     btn.addEventListener('click', async () => {
       const item = lastItems.find((i) => i.id === id);
       if (item) await invoke('open_path', { path: item.path });
@@ -577,8 +579,9 @@ function schedulePreview() {
     playlistValue = true;
     syncPlaylist();
   }
-  $('previewTitle').textContent = isPlaylist ? 'Loading playlist…' : 'Loading info…';
-  $('previewMeta').textContent = isPlaylist ? 'Fetching video list' : 'Fetching media details';
+  $('previewTitle').textContent = isPlaylist ? t('playlist.loading') : t('playlist.loadingInfo');
+  $('previewMeta').textContent = isPlaylist ? t('playlist.fetchList') : t('playlist.fetchDetails');
+  $('previewTitle').dataset.placeholder = '1';
   box.classList.remove('no-thumb');
   box.classList.add('is-loading');
   box.hidden = false;
@@ -587,14 +590,15 @@ function schedulePreview() {
       const entries = await loadPlaylist(url);
       box.classList.remove('is-loading');
       box.classList.add('no-thumb');
-      $('previewTitle').textContent = 'Playlist';
-      $('previewMeta').textContent = entries.length ? `${entries.length} videos` : 'No videos found';
+      $('previewTitle').textContent = t('form.playlist');
+      $('previewMeta').textContent = entries.length ? t('playlist.videos', { n: entries.length }) : t('playlist.none');
       box.hidden = false;
       return;
     }
     try {
       const info = await invoke('preview_link', { url });
       $('previewTitle').textContent = info.title || url;
+      $('previewTitle').dataset.placeholder = '';
       $('previewMeta').textContent = [info.uploader, info.duration].filter(Boolean).join(' · ');
       if (info.thumbnail) {
         $('previewThumb').src = info.thumbnail;
@@ -652,13 +656,13 @@ function renderPlaylist() {
 }
 
 function updatePlaylistCount() {
-  $('playlistCount').textContent = `${playlistSelected.size} / ${playlistEntries.length} selected`;
+  $('playlistCount').textContent = t('playlist.selected', { a: playlistSelected.size, b: playlistEntries.length });
 }
 
 async function loadPlaylist(url) {
   playlistUrl = url;
   const panel = $('playlistPanel');
-  $('playlistItems').innerHTML = '<p class="format-empty">Loading playlist…</p>';
+  $('playlistItems').innerHTML = `<p class="format-empty">${t('playlist.loading')}</p>`;
   panel.hidden = false;
   try {
     const entries = await invoke('list_playlist', { url });
@@ -668,7 +672,7 @@ async function loadPlaylist(url) {
     return playlistEntries;
   } catch (e) {
     $('playlistItems').innerHTML = `<p class="format-empty">${String(e)}</p>`;
-    $('playlistCount').textContent = 'playlist unavailable';
+    $('playlistCount').textContent = t('playlist.unavailable');
     return [];
   }
 }
@@ -790,7 +794,7 @@ $('formatsBtn').addEventListener('click', async () => {
       left.className = 'format-title';
       left.appendChild(formatIcon(f.kind));
       const label = document.createElement('span');
-      label.textContent = f.kind === 'audio' ? `Audio · ${f.ext}` : `${f.resolution} · ${f.ext}`;
+      label.textContent = f.kind === 'audio' ? t('format.audio', { ext: f.ext }) : `${f.resolution} · ${f.ext}`;
       left.appendChild(label);
       const right = document.createElement('small');
       const bits = [f.codec];
@@ -801,7 +805,7 @@ $('formatsBtn').addEventListener('click', async () => {
       b.append(left, right);
       b.addEventListener('click', () => {
         extraArgsValue = `-f ${f.id}`;
-        setHint(`Format ${f.id} selected.`);
+        setHint(t('hint.format', { id: f.id }));
         rows.querySelectorAll('.format-row').forEach((r) => r.classList.remove('active'));
         b.classList.add('active');
       });
@@ -820,7 +824,7 @@ document.addEventListener('drop', (e) => {
     $('urlInput').value = url.trim();
     setUrlError(false);
     schedulePreview();
-    setHint('Link dropped.');
+    setHint(t('hint.dropped'));
   }
 });
 
@@ -890,7 +894,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const dir = await invoke('default_dir');
     if (dir) $('dirInput').value = dir;
   } catch (_) {
-    setHint('Could not read the default download folder.', true);
+    setHint(t('hint.dirFail'), true);
   }
   try {
     const s = await invoke('get_settings');
@@ -920,3 +924,11 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     } catch (_) { /* settings are optional */ }
   }, 2000);
 })();
+
+window.addEventListener('infallora:languagechange', () => {
+  qualitySpec.valueEl.textContent = labelFor(QUALITY_OPTIONS[mode], qualityValue);
+  formatSpec.valueEl.textContent = labelFor(FORMAT_OPTIONS, formatValue);
+  renderQuality();
+  renderFormats();
+  poll();
+});

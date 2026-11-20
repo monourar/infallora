@@ -24,7 +24,7 @@
 
 .set-sidebar {
   padding: 22px 12px;
-  border-right: 1px solid var(--glass-border);
+  border-inline-end: 1px solid var(--glass-border);
   background: var(--glass-field);
   overflow-y: auto;
 }
@@ -46,7 +46,7 @@
   color: var(--ink-muted);
   font: inherit;
   font-size: 12px;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition: background var(--motion), color var(--motion), transform var(--motion);
 }
@@ -104,7 +104,7 @@
 .set-row-head .set-badge { font-size: 11px; color: var(--ink-muted); }
 .set-help {
   margin: 8px 0 0;
-  padding-left: 0;
+  padding-inline-start: 0;
   font-size: 12px;
   line-height: 1.45;
   color: var(--ink-muted);
@@ -231,10 +231,10 @@
 }
 .set-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
 .set-row .input-wrap { position: relative; }
-.set-row .input-wrap .set-input { padding-right: 46px; }
+.set-row .input-wrap .set-input { padding-inline-end: 46px; }
 .set-row .input-action {
   position: absolute;
-  right: 5px;
+  inset-inline-end: 5px;
   top: 5px;
   width: 30px;
   height: 30px;
@@ -295,7 +295,7 @@
 }
 .set-actions .primary-btn { height: 42px; margin: 0; flex: 1; }
 .set-actions .mini-btn { min-height: 42px; }
-.set-status { margin-top: 10px; text-align: left; }
+.set-status { margin-top: 10px; text-align: start; }
 
 .set-action {
   min-height: 38px;
@@ -339,9 +339,21 @@
 
 @media (max-width: 620px) {
   .set-shell { grid-template-columns: 1fr; }
-  .set-sidebar { padding: 12px; border-right: none; border-bottom: 1px solid var(--glass-border); }
+  .set-sidebar { padding: 12px; border-inline-end: none; border-bottom: 1px solid var(--glass-border); }
   .set-nav { flex-direction: row; overflow-x: auto; }
   .set-nav-item { flex: none; }
   .set-side-head { display: none; }
   .set-content { padding: 16px; }
 }
+
+/* ---------- Arabic / RTL ---------- */
+html[dir="rtl"] .set-side-head strong,
+html[dir="rtl"] .set-content-head h2,
+html[dir="rtl"] .set-group h3 {
+  letter-spacing: normal;
+  line-height: 1.35;
+}
+html[dir="rtl"] .set-switch.active i { transform: translateX(-19px); }
+html[dir="rtl"] .set-help { line-height: 1.65; }
+html[dir="rtl"] .set-preview-row strong { letter-spacing: normal; }
+
