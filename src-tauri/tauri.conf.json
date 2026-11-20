@@ -1,7 +1,7 @@
 {
     "$schema":  "https://schema.tauri.app/config/2",
     "productName":  "Infallora",
-    "version":  "0.2.3",
+    "version":  "0.2.4",
     "identifier":  "com.infallora.desktop",
     "build":  {
                   "frontendDist":  "../dist"
@@ -45,6 +45,8 @@
                                      "../yt-dlp.exe",
                                      "../ffmpeg.exe",
                                      "../ffprobe.exe"
-                                 ]
+                                 ],
+                   "installerIcon":  "icons/icon.ico",
+                   "uninstallerIcon":  "icons/icon.ico"
                }
 }
