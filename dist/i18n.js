@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.2.5';
+  const VERSION = window.INFALLORA_VERSION || '0.2.6';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -188,6 +188,13 @@
     'update.installFailed': { en: 'Install failed: {e}', ar: 'فشل التثبيت: {e}' },
   };
 
+  const EXTRA = window.INFALLORA_TRANSLATIONS || {};
+  for (const [code, table] of Object.entries(EXTRA)) {
+    for (const [key, text] of Object.entries(table)) {
+      if (DICT[key]) DICT[key][code] = text;
+    }
+  }
+
   const REVERSE = {};
   for (const [key, entry] of Object.entries(DICT)) {
     if (!REVERSE[entry.en]) REVERSE[entry.en] = key;
@@ -197,7 +204,11 @@
 
   function resolve() {
     if (lang === 'system') {
-      return (navigator.language || 'en').toLowerCase().startsWith('ar') ? 'ar' : 'en';
+      const sys = (navigator.language || 'en').toLowerCase();
+      for (const code of ['ar', 'fr', 'es', 'de', 'tr']) {
+        if (sys.startsWith(code)) return code;
+      }
+      return 'en';
     }
     return lang;
   }

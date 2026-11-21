@@ -110,7 +110,7 @@ function fill(settings) {
   setSeg('concurrent', state.max_concurrent);
   setSeg('saving', state.saving_method);
   setSeg('autoUpdate', state.auto_update ? 'on' : 'off');
-  setSeg('language', state.language || 'system');
+  if ($('languageSelect')) $('languageSelect').value = state.language || 'system';
   setToggle('reduceMotion', state.reduce_motion);
   setToggle('h265', state.allow_h265);
   setToggle('metadata', state.metadata);
@@ -183,11 +183,12 @@ document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
     if (group === 'concurrent') state.max_concurrent = Number(value);
     if (group === 'saving') state.saving_method = value;
     if (group === 'autoUpdate') state.auto_update = value === 'on';
-    if (group === 'language') {
-      state.language = value;
-      window.I18n.setLanguage(value);
-    }
   });
+});
+
+$('languageSelect').addEventListener('change', (e) => {
+  state.language = e.target.value;
+  window.I18n.setLanguage(e.target.value);
 });
 
 document.querySelectorAll('.opt-chip[data-lang]').forEach((btn) => {

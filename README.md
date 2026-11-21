@@ -53,7 +53,7 @@ Arabic interface with automatic RTL layout:
 - **Playlists** — browse every entry, preview thumbnails, select all/none, and download one row per video
 - **Subtitles and metadata** — language chips for 10 languages, embedded metadata, thumbnail sidecar files
 - **Liquid-glass interface** — light/dark themes, reduced-motion mode, and in-window settings
-- **Arabic and RTL** — complete translation with automatic layout mirroring
+- **Six languages** — English, العربية, Français, Español, Deutsch and Türkçe, with automatic RTL mirroring for Arabic
 - **Private videos** — automatic `cookies.txt` detection, no settings needed for public content
 - **Self-updating** — signed updates delivered through GitHub Releases
 - **Local only** — no account, no telemetry, no upload, no cloud
@@ -84,7 +84,7 @@ Infallora cannot bypass authentication. Your sign-in is required to access your 
 
 ### Language
 
-**Settings → appearance → language** offers *system*, *English*, and *العربية*. The interface mirrors automatically in Arabic. With *system*, Infallora follows your Windows language.
+**Settings → appearance → language** offers *system*, *English*, *العربية*, *Français*, *Español*, *Deutsch* and *Türkçe*. The interface mirrors automatically in Arabic. With *system*, Infallora follows your Windows language.
 
 ---
 
