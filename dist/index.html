@@ -112,6 +112,24 @@
             <img class="icon glass-icon input-icon" src="icons/search.svg" alt="">
             <input id="playlistSearch" class="set-input" type="text" data-i18n-placeholder="playlist.search" placeholder="Search videos…" spellcheck="false">
           </div>
+          <div class="playlist-formats">
+            <div class="select-wrap">
+              <button id="playlistQuality" class="select-trigger" type="button" role="combobox"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="playlistQualityList" aria-label="Quality">
+                <span id="playlistQualityValue">Best quality</span>
+                <img class="icon glass-icon chevron" src="icons/chevron.svg" alt="">
+              </button>
+              <div id="playlistQualityList" class="select-popover" role="listbox" hidden></div>
+            </div>
+            <div class="select-wrap">
+              <button id="playlistFormat" class="select-trigger" type="button" role="combobox"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="playlistFormatList" aria-label="Container">
+                <span id="playlistFormatValue">MP4</span>
+                <img class="icon glass-icon chevron" src="icons/chevron.svg" alt="">
+              </button>
+              <div id="playlistFormatList" class="select-popover" role="listbox" hidden></div>
+            </div>
+          </div>
           <div id="playlistItems" class="playlist-items"></div>
         </div>
 
@@ -175,7 +193,7 @@
 
         <button id="downloadBtn" class="primary-btn col-right" type="button">
           <img class="icon glass-icon btn-icon" src="icons/download.svg" alt="">
-          <span class="btn-label">Download</span>
+          <span class="btn-label" data-i18n="form.download">Download</span>
           <span class="spinner" aria-hidden="true"></span>
         </button>
         <button id="formatsBtn" class="fine-toggle text-btn col-left" type="button" aria-expanded="false" aria-controls="formatListPanel">Browse formats</button>
@@ -209,7 +227,7 @@
   <div id="settingsOverlay" class="settings-overlay" hidden>
     <div class="set-shell">
       <aside class="set-sidebar">
-        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.3.1</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
+        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.3.2</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
         <nav class="set-nav" aria-label="Settings sections">
           <button class="set-nav-item active" data-section="appearance" type="button">
             <img class="icon glass-icon" src="icons/sun.svg" alt="">
@@ -415,6 +433,10 @@
               <div class="set-switch-row"><span class="set-row-label">save thumbnail image</span><button id="writeThumbnail" class="set-switch" type="button" aria-pressed="false"><i></i></button></div>
               <p class="set-help">Writes the video thumbnail as a .jpg file next to the download.</p>
             </div>
+            <div class="set-row">
+              <div class="set-switch-row"><span class="set-row-label" data-i18n="set.multiAudio">embed all audio tracks</span><button id="multiAudio" class="set-switch" type="button" aria-pressed="false"><i></i></button></div>
+              <p class="set-help" data-i18n="set.multiAudioHelp">Keeps every audio language in the file instead of only the default one.</p>
+            </div>
           </div>
         </section>
 
@@ -547,7 +569,7 @@
     </div>
   </div>
   <div id="toasts" class="toasts" aria-live="polite" aria-label="Notifications"></div>
-  <script>window.INFALLORA_VERSION = '0.3.1';</script>
+  <script>window.INFALLORA_VERSION = '0.3.2';</script>
   <script src="translations.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

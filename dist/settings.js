@@ -24,6 +24,7 @@ const state = {
   cookies_file: '',
   extra_args: '',
   speed_limit: '',
+  multi_audio: false,
   auto_update: true,
   language: 'system',
   engine_auto_update: true,
@@ -195,6 +196,7 @@ function fill(settings) {
   setToggle('h265', state.allow_h265);
   setToggle('metadata', state.metadata);
   setToggle('writeThumbnail', state.write_thumbnail);
+  setToggle('multiAudio', state.multi_audio);
   $('subtitleLang').value = state.subtitle_lang || '';
   syncLanguage(state.subtitle_lang);
   $('cookiesFile').value = state.cookies_file || '';
@@ -219,6 +221,7 @@ function collect() {
     filename_style: state.filename_style,
     metadata: state.metadata,
     write_thumbnail: state.write_thumbnail,
+    multi_audio: state.multi_audio,
     cookies_file: $('cookiesFile').value.trim(),
     subtitle_lang: $('subtitleLang').value.trim(),
     saving_method: state.saving_method,
@@ -393,6 +396,11 @@ $('writeThumbnail').addEventListener('click', () => {
   setToggle('writeThumbnail', state.write_thumbnail);
 });
 
+$('multiAudio').addEventListener('click', () => {
+  state.multi_audio = !state.multi_audio;
+  setToggle('multiAudio', state.multi_audio);
+});
+
 $('closeBtn').addEventListener('click', () => {
   const overlay = $('settingsOverlay');
   overlay.hidden = true;
@@ -412,7 +420,7 @@ $('resetBtn').addEventListener('click', () => {
   fill({
     theme: 'system', reduce_motion: false, quality: 'best', codec: 'h264', format: 'auto',
     allow_h265: false, bitrate: 'best', audio_format: 'mp3', filename_style: 'basic',
-    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', speed_limit: '', auto_update: true, language: 'system', engine_auto_update: true, palette: 'violet',
+    metadata: true, write_thumbnail: false, multi_audio: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', speed_limit: '', auto_update: true, language: 'system', engine_auto_update: true, palette: 'violet',
   });
   window.I18n.setLanguage('system');
   $('setStatus').textContent = window.I18n.t('set.restored');

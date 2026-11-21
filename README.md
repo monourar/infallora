@@ -113,7 +113,7 @@ Use **Browse formats** for per-format details before downloading.
 
 ### Playlists
 
-Paste a playlist link and Infallora lists every entry with thumbnail and duration. Use **all** / **none** or tick individual videos, then press **Download** — only selected videos are queued.
+Paste a playlist link — or just type a search term — and Infallora lists every entry with thumbnail and duration. Search results come from YouTube. Use **all** / **none** or tick individual videos (selected rows highlight with a checkmark), then press **Download (n)** — only selected videos are queued. Quality and container can be picked right inside the panel.
 
 ### Private or members-only videos
 

@@ -79,6 +79,7 @@ pub struct AppSettings {
     engine_auto_update: bool,
     palette: String,
     speed_limit: String,
+    multi_audio: bool,
 }
 
 impl Default for AppSettings {
@@ -107,6 +108,7 @@ impl Default for AppSettings {
             engine_auto_update: true,
             palette: "violet".into(),
             speed_limit: String::new(),
+            multi_audio: false,
         }
     }
 }
@@ -370,6 +372,7 @@ fn build_args(
     extra_args: &str,
     out_dir: &str,
     speed_limit: &str,
+    multi_audio: bool,
 ) -> Vec<String> {
     let mut args = vec![
         "--newline".to_string(),
@@ -476,6 +479,9 @@ fn build_args(
     let template = PathBuf::from(out_dir).join(name_template);
     args.push("-o".into());
     args.push(template.to_string_lossy().into_owned());
+    if multi_audio {
+        args.push("--audio-multistreams".into());
+    }
     let limit = speed_limit.trim();
     if !limit.is_empty() {
         args.push("--limit-rate".into());
@@ -569,6 +575,7 @@ fn run_download(
         }
     };
 
+    let current_settings = get_settings();
     let mut args = build_args(
         mode,
         quality,
@@ -582,7 +589,8 @@ fn run_download(
         playlist,
         extra_args,
         out_dir,
-        &get_settings().speed_limit,
+        &current_settings.speed_limit,
+        current_settings.multi_audio,
     );
     if let Some(dir) = find_ffmpeg_dir(&ytdlp) {
         args.push("--ffmpeg-location".into());
@@ -1261,6 +1269,16 @@ fn list_playlist_blocking(url: &str) -> Result<Vec<PlaylistEntry>, String> {
 }
 
 #[tauri::command]
+fn search_videos(query: String) -> Result<Vec<PlaylistEntry>, String> {
+    let query = query.trim();
+    if query.is_empty() {
+        return Ok(Vec::new());
+    }
+    let target = format!("ytsearch20:{}", query);
+    list_playlist_blocking(&target)
+}
+
+#[tauri::command]
 async fn list_playlist(url: String) -> Result<Vec<PlaylistEntry>, String> {
     tauri::async_runtime::spawn_blocking(move || list_playlist_blocking(&url))
         .await
@@ -1390,6 +1408,7 @@ fn main() {
             update_engine,
             notify,
             reorder_downloads,
+            search_videos,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Infallora");

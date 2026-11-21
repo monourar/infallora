@@ -181,18 +181,36 @@ const formatSpec = setupSelect(
   (v) => { formatValue = v; formatSpec.valueEl.textContent = labelFor(FORMAT_OPTIONS, v); closeSelect(); formatSpec.trigger.focus(); }
 );
 
+const playlistQualitySpec = setupSelect(
+  $('playlistQuality'), $('playlistQualityList'), $('playlistQualityValue'),
+  () => QUALITY_OPTIONS[mode],
+  () => qualityValue,
+  (v) => { qualityValue = v; renderQuality(); closeSelect(); playlistQualitySpec.trigger.focus(); }
+);
+
+const playlistFormatSpec = setupSelect(
+  $('playlistFormat'), $('playlistFormatList'), $('playlistFormatValue'),
+  () => FORMAT_OPTIONS,
+  () => formatValue,
+  (v) => { formatValue = v; renderFormats(); closeSelect(); playlistFormatSpec.trigger.focus(); }
+);
+
 function renderQuality() {
   const options = QUALITY_OPTIONS[mode];
   if (!options.some(([v]) => v === qualityValue)) qualityValue = mode === 'audio' ? 'mp3' : 'best';
   qualitySpec.valueEl.textContent = labelFor(options, qualityValue);
+  $('playlistQualityValue').textContent = labelFor(options, qualityValue);
   $('formatFields').style.display = mode === 'auto' ? 'none' : '';
   $('formatRow').style.display = mode === 'audio' ? 'none' : '';
   if (openSelect === qualitySpec) fillSelect(qualitySpec);
+  if (openSelect === playlistQualitySpec) fillSelect(playlistQualitySpec);
 }
 
 function renderFormats() {
   formatSpec.valueEl.textContent = labelFor(FORMAT_OPTIONS, formatValue);
+  $('playlistFormatValue').textContent = labelFor(FORMAT_OPTIONS, formatValue);
   if (openSelect === formatSpec) fillSelect(formatSpec);
+  if (openSelect === playlistFormatSpec) fillSelect(playlistFormatSpec);
 }
 
 function createItem() {
@@ -657,14 +675,15 @@ function schedulePreview() {
   window.clearTimeout(previewTimer);
   const url = $('urlInput').value.trim();
   const box = $('preview');
-  if (!/^https?:\/\//i.test(url)) {
+  const isSearch = url.length > 1 && !/^https?:\/\//i.test(url);
+  if (!url) {
     box.hidden = true;
     $('playlistPanel').hidden = true;
     playlistEntries = [];
     playlistSelected.clear();
     return;
   }
-  const isPlaylist = /[?&]list=|\/playlist/i.test(url);
+  const isPlaylist = isSearch || /[?&]list=|\/playlist/i.test(url);
   if (isPlaylist && !playlistValue) {
     playlistValue = true;
     syncPlaylist();
@@ -676,11 +695,21 @@ function schedulePreview() {
   box.classList.add('is-loading');
   box.hidden = false;
   previewTimer = window.setTimeout(async () => {
-    if (isPlaylist || playlistValue) {
-      const entries = await loadPlaylist(url);
+    if (isSearch || isPlaylist || playlistValue) {
+      const entries = isSearch
+        ? await invoke('search_videos', { query: url })
+        : await loadPlaylist(url);
+      if (isSearch) {
+        playlistEntries = entries;
+        playlistSelected = new Set(entries.map((e) => e.index));
+        playlistValue = true;
+        syncPlaylist();
+        renderPlaylist();
+        $('playlistPanel').hidden = false;
+      }
       box.classList.remove('is-loading');
       box.classList.add('no-thumb');
-      $('previewTitle').textContent = t('form.playlist');
+      $('previewTitle').textContent = isSearch ? t('search.results') : t('form.playlist');
       $('previewMeta').textContent = entries.length ? t('playlist.videos', { n: entries.length }) : t('playlist.none');
       box.hidden = false;
       return;
@@ -723,14 +752,20 @@ function renderPlaylist() {
     return;
   }
   visible.forEach((entry) => {
+    const selected = playlistSelected.has(entry.index);
     const row = document.createElement('label');
-    row.className = 'playlist-item';
+    row.className = 'playlist-item' + (selected ? ' selected' : '');
     const check = document.createElement('input');
     check.type = 'checkbox';
-    check.checked = playlistSelected.has(entry.index);
+    check.checked = selected;
     check.addEventListener('change', () => {
-      if (check.checked) playlistSelected.add(entry.index);
-      else playlistSelected.delete(entry.index);
+      if (check.checked) {
+        playlistSelected.add(entry.index);
+        row.classList.add('selected');
+      } else {
+        playlistSelected.delete(entry.index);
+        row.classList.remove('selected');
+      }
       updatePlaylistCount();
     });
     const thumb = document.createElement('img');
@@ -750,7 +785,11 @@ function renderPlaylist() {
     const dur = document.createElement('span');
     dur.className = 'playlist-dur';
     dur.textContent = entry.duration;
-    row.append(check, thumb, name, dur);
+    const mark = document.createElement('img');
+    mark.className = 'playlist-check glass-icon';
+    mark.src = 'icons/check.svg';
+    mark.alt = '';
+    row.append(check, thumb, name, dur, mark);
     rows.appendChild(row);
   });
   updatePlaylistCount();
@@ -758,6 +797,12 @@ function renderPlaylist() {
 
 function updatePlaylistCount() {
   $('playlistCount').textContent = t('playlist.selected', { a: playlistSelected.size, b: playlistEntries.length });
+  const label = $('downloadBtn').querySelector('.btn-label');
+  if (label) {
+    label.textContent = playlistValue && playlistEntries.length
+      ? `${t('form.download')} (${playlistSelected.size})`
+      : t('form.download');
+  }
 }
 
 async function loadPlaylist(url) {

@@ -175,7 +175,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "limite de vitesse",
     "set.speedPlaceholder": "ex. 5M ou 500K",
     "set.speedHelp": "Laissez vide pour illimité. Exemple : 5M = 5 Mo/s, 500K = 500 Ko/s.",
-    "playlist.noResults": "Aucune vidéo correspondante"
+    "playlist.noResults": "Aucune vidéo correspondante",
+    "set.multiAudio": "intégrer toutes les pistes audio",
+    "set.multiAudioHelp": "Conserve toutes les langues audio au lieu de la seule par défaut.",
+    "search.results": "Résultats de recherche"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -353,7 +356,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "límite de velocidad",
     "set.speedPlaceholder": "ej. 5M o 500K",
     "set.speedHelp": "Deja vacío para sin límite. Ejemplo: 5M = 5 MB/s, 500K = 500 KB/s.",
-    "playlist.noResults": "No hay vídeos que coincidan"
+    "playlist.noResults": "No hay vídeos que coincidan",
+    "set.multiAudio": "incluir todas las pistas de audio",
+    "set.multiAudioHelp": "Conserva todos los idiomas de audio en lugar de solo el predeterminado.",
+    "search.results": "Resultados de búsqueda"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -531,7 +537,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "Geschwindigkeitslimit",
     "set.speedPlaceholder": "z. B. 5M oder 500K",
     "set.speedHelp": "Leer lassen für unbegrenzt. Beispiel: 5M = 5 MB/s, 500K = 500 KB/s.",
-    "playlist.noResults": "Keine passenden Videos"
+    "playlist.noResults": "Keine passenden Videos",
+    "set.multiAudio": "alle Audiospuren einbetten",
+    "set.multiAudioHelp": "Behält alle Audiosprachen statt nur der Standardspur.",
+    "search.results": "Suchergebnisse"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -709,7 +718,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "hız sınırı",
     "set.speedPlaceholder": "örn. 5M veya 500K",
     "set.speedHelp": "Sınırsız için boş bırakın. Örnek: 5M = 5 MB/s, 500K = 500 KB/s.",
-    "playlist.noResults": "Eşleşen video yok"
+    "playlist.noResults": "Eşleşen video yok",
+    "set.multiAudio": "tüm ses parçalarını göm",
+    "set.multiAudioHelp": "Yalnızca varsayılan yerine tüm ses dillerini korur.",
+    "search.results": "Arama sonuçları"
   },
   "pt": {
     "app.subtitle": "Downloader de vídeos e áudio",
@@ -887,7 +899,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "limite de velocidade",
     "set.speedPlaceholder": "ex. 5M ou 500K",
     "set.speedHelp": "Deixe vazio para ilimitado. Exemplo: 5M = 5 MB/s, 500K = 500 KB/s.",
-    "playlist.noResults": "Nenhum vídeo encontrado"
+    "playlist.noResults": "Nenhum vídeo encontrado",
+    "set.multiAudio": "incorporar todas as faixas de áudio",
+    "set.multiAudioHelp": "Mantém todos os idiomas de áudio em vez de apenas o padrão.",
+    "search.results": "Resultados da busca"
   },
   "ru": {
     "app.subtitle": "Загрузчик видео и аудио",
@@ -1065,7 +1080,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "ограничение скорости",
     "set.speedPlaceholder": "напр. 5M или 500K",
     "set.speedHelp": "Оставьте пустым без ограничений. Например: 5M = 5 МБ/с, 500K = 500 КБ/с.",
-    "playlist.noResults": "Нет подходящих видео"
+    "playlist.noResults": "Нет подходящих видео",
+    "set.multiAudio": "включать все аудиодорожки",
+    "set.multiAudioHelp": "Сохраняет все языковые дорожки, а не только основную.",
+    "search.results": "Результаты поиска"
   },
   "zh": {
     "app.subtitle": "视频和音频下载器",
@@ -1243,6 +1261,9 @@ window.INFALLORA_TRANSLATIONS = {
     "set.speedLimit": "速度限制",
     "set.speedPlaceholder": "例如 5M 或 500K",
     "set.speedHelp": "留空表示不限速。例如：5M = 5 MB/s，500K = 500 KB/s.",
-    "playlist.noResults": "没有匹配的视频"
+    "playlist.noResults": "没有匹配的视频",
+    "set.multiAudio": "嵌入所有音轨",
+    "set.multiAudioHelp": "保留所有语言音轨，而不只是默认音轨。",
+    "search.results": "搜索结果"
   }
 };

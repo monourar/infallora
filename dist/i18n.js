@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.3.1';
+  const VERSION = window.INFALLORA_VERSION || '0.3.2';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -165,6 +165,9 @@
     'set.speedLimit': { en: 'speed limit', ar: 'حد السرعة' },
     'set.speedPlaceholder': { en: 'e.g. 5M or 500K', ar: 'مثال: 5M أو 500K' },
     'set.speedHelp': { en: 'Leave empty for unlimited. Example: 5M = 5 MB/s, 500K = 500 KB/s.', ar: 'اتركه فارغًا لعدم الحد. مثال: 5M = 5 ميغابايت/ث، 500K = 500 كيلوبايت/ث.' },
+    'set.multiAudio': { en: 'embed all audio tracks', ar: 'تضمين كل المسارات الصوتية' },
+    'set.multiAudioHelp': { en: 'Keeps every audio language in the file instead of only the default one.', ar: 'يحافظ على كل لغات الصوت في الملف بدلًا من الافتراضية فقط.' },
+    'search.results': { en: 'Search results', ar: 'نتائج البحث' },
     'set.concurrent': { en: 'max concurrent downloads', ar: 'أقصى عدد تنزيلات متزامنة' },
 
     // settings updates
