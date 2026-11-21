@@ -310,11 +310,26 @@ fn latest_ytdlp_version() -> Result<String, String> {
 
 fn download_ytdlp() -> Result<String, String> {
     let dir = engine_dir().ok_or_else(|| "engine folder not found".to_string())?;
-    let target = dir.join("yt-dlp.exe");
-    let tmp = dir.join("yt-dlp.new.exe");
+    #[cfg(windows)]
+    let (file, url) = (
+        "yt-dlp.exe",
+        "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
+    );
+    #[cfg(target_os = "linux")]
+    let (file, url) = (
+        "yt-dlp.exe",
+        "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux",
+    );
+    #[cfg(target_os = "macos")]
+    let (file, url) = (
+        "yt-dlp.exe",
+        "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos",
+    );
+    let target = dir.join(file);
+    let tmp = dir.join(format!("{}.new", file));
 
     let bytes = http_client()?
-        .get("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe")
+        .get(url)
         .send()
         .map_err(|e| e.to_string())?
         .bytes()
@@ -323,6 +338,11 @@ fn download_ytdlp() -> Result<String, String> {
         return Err("download too small".to_string());
     }
     std::fs::write(&tmp, &bytes).map_err(|e| e.to_string())?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let _ = std::fs::set_permissions(&tmp, std::fs::Permissions::from_mode(0o755));
+    }
 
     let version = command_first_line(&tmp, "--version")
         .ok_or_else(|| "downloaded file is not usable".to_string())?;

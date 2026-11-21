@@ -178,7 +178,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "Aucune vidéo correspondante",
     "set.multiAudio": "intégrer toutes les pistes audio",
     "set.multiAudioHelp": "Conserve toutes les langues audio au lieu de la seule par défaut.",
-    "search.results": "Résultats de recherche"
+    "search.results": "Résultats de recherche",
+    "form.mediaPlaceholder": "Collez un lien, ou plusieurs — un par ligne (Ctrl+Entrée pour télécharger)",
+    "form.linksCount": "{n} liens"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -359,7 +361,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "No hay vídeos que coincidan",
     "set.multiAudio": "incluir todas las pistas de audio",
     "set.multiAudioHelp": "Conserva todos los idiomas de audio en lugar de solo el predeterminado.",
-    "search.results": "Resultados de búsqueda"
+    "search.results": "Resultados de búsqueda",
+    "form.mediaPlaceholder": "Pega un enlace o varios — uno por línea (Ctrl+Enter para descargar)",
+    "form.linksCount": "{n} enlaces"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -540,7 +544,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "Keine passenden Videos",
     "set.multiAudio": "alle Audiospuren einbetten",
     "set.multiAudioHelp": "Behält alle Audiosprachen statt nur der Standardspur.",
-    "search.results": "Suchergebnisse"
+    "search.results": "Suchergebnisse",
+    "form.mediaPlaceholder": "Einen Link einfügen oder mehrere – einer pro Zeile (Strg+Enter zum Download)",
+    "form.linksCount": "{n} Links"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -721,7 +727,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "Eşleşen video yok",
     "set.multiAudio": "tüm ses parçalarını göm",
     "set.multiAudioHelp": "Yalnızca varsayılan yerine tüm ses dillerini korur.",
-    "search.results": "Arama sonuçları"
+    "search.results": "Arama sonuçları",
+    "form.mediaPlaceholder": "Bir bağlantı veya birkaçını yapıştırın — her biri ayrı satırda (İndirmek için Ctrl+Enter)",
+    "form.linksCount": "{n} bağlantı"
   },
   "pt": {
     "app.subtitle": "Downloader de vídeos e áudio",
@@ -902,7 +910,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "Nenhum vídeo encontrado",
     "set.multiAudio": "incorporar todas as faixas de áudio",
     "set.multiAudioHelp": "Mantém todos os idiomas de áudio em vez de apenas o padrão.",
-    "search.results": "Resultados da busca"
+    "search.results": "Resultados da busca",
+    "form.mediaPlaceholder": "Cole um link, ou vários — um por linha (Ctrl+Enter para baixar)",
+    "form.linksCount": "{n} links"
   },
   "ru": {
     "app.subtitle": "Загрузчик видео и аудио",
@@ -1083,7 +1093,9 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "Нет подходящих видео",
     "set.multiAudio": "включать все аудиодорожки",
     "set.multiAudioHelp": "Сохраняет все языковые дорожки, а не только основную.",
-    "search.results": "Результаты поиска"
+    "search.results": "Результаты поиска",
+    "form.mediaPlaceholder": "Вставьте одну ссылку или несколько — каждую на новой строке (Ctrl+Enter для загрузки)",
+    "form.linksCount": "{n} ссылок"
   },
   "zh": {
     "app.subtitle": "视频和音频下载器",
@@ -1264,6 +1276,8 @@ window.INFALLORA_TRANSLATIONS = {
     "playlist.noResults": "没有匹配的视频",
     "set.multiAudio": "嵌入所有音轨",
     "set.multiAudioHelp": "保留所有语言音轨，而不只是默认音轨。",
-    "search.results": "搜索结果"
+    "search.results": "搜索结果",
+    "form.mediaPlaceholder": "粘贴一个链接，或多个——每行一个（Ctrl+Enter 下载）",
+    "form.linksCount": "{n} 个链接"
   }
 };

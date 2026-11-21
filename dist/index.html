@@ -81,14 +81,15 @@
         </div>
 
         <div class="field col-left">
-          <label for="urlInput">Media link</label>
+          <label for="urlInput" data-i18n="form.mediaLink">Media link</label>
           <div class="input-wrap">
             <img class="icon glass-icon input-icon" src="icons/link.svg" alt="">
-            <input id="urlInput" type="url" inputmode="url" placeholder="https://..." spellcheck="false" autocomplete="off" aria-describedby="hint">
+            <textarea id="urlInput" rows="1" inputmode="url" data-i18n-placeholder="form.mediaPlaceholder" placeholder="Paste one link, or several — one per line" spellcheck="false" autocomplete="off" aria-describedby="hint"></textarea>
             <button id="pasteBtn" class="input-action" type="button" aria-label="Paste link from clipboard" title="Paste link">
               <img class="icon glass-icon" src="icons/clipboard.svg" alt="">
             </button>
           </div>
+          <p id="linkCount" class="set-help" hidden></p>
         </div>
 
         <div id="preview" class="preview glass col-left" hidden>
@@ -227,7 +228,7 @@
   <div id="settingsOverlay" class="settings-overlay" hidden>
     <div class="set-shell">
       <aside class="set-sidebar">
-        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.3.2</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
+        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.4.0</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
         <nav class="set-nav" aria-label="Settings sections">
           <button class="set-nav-item active" data-section="appearance" type="button">
             <img class="icon glass-icon" src="icons/sun.svg" alt="">
@@ -569,7 +570,7 @@
     </div>
   </div>
   <div id="toasts" class="toasts" aria-live="polite" aria-label="Notifications"></div>
-  <script>window.INFALLORA_VERSION = '0.3.2';</script>
+  <script>window.INFALLORA_VERSION = '0.4.0';</script>
   <script src="translations.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

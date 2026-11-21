@@ -415,11 +415,18 @@ async function poll() {
 }
 
 async function startDownload() {
-  const url = $('urlInput').value.trim();
-  if (!url) {
+  const raw = $('urlInput').value.trim();
+  const links = raw.split('\n').map((s) => s.trim()).filter(Boolean)
+    .filter((s) => /^https?:\/\//i.test(s));
+  if (!raw) {
     setHint(t('hint.pasteFirst'), true);
     setUrlError(true);
     $('urlInput').focus();
+    return;
+  }
+  if (!links.length) {
+    setHint(t('hint.pasteFirst'), true);
+    setUrlError(true);
     return;
   }
   setUrlError(false);
@@ -464,10 +471,15 @@ async function startDownload() {
         }
         return invoke('start_download', { ...common, url: videoUrl, playlist: false, label: entry.title });
       }));
+    } else if (links.length > 1) {
+      added = links.length;
+      await Promise.all(links.map((link) =>
+        invoke('start_download', { ...common, url: link, playlist: false, label: '' })
+      ));
     } else {
       const previewLabel = $('previewTitle').textContent.trim();
       const label = previewLabel && $('previewTitle').dataset.placeholder !== '1' ? previewLabel : '';
-      await invoke('start_download', { ...common, url, playlist: playlistValue, label });
+      await invoke('start_download', { ...common, url: links[0], playlist: playlistValue, label });
     }
     $('urlInput').value = '';
     $('preview').hidden = true;
@@ -536,7 +548,12 @@ $('urlInput').addEventListener('input', () => {
   schedulePreview();
 });
 $('urlInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') startDownload();
+  if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      startDownload();
+    }
+  }
 });
 
 $('pasteBtn').addEventListener('click', async () => {
@@ -673,8 +690,22 @@ function openSettingsCookies() {
 
 function schedulePreview() {
   window.clearTimeout(previewTimer);
-  const url = $('urlInput').value.trim();
+  const raw = $('urlInput').value.trim();
+  const lines = raw.split('\n').map((s) => s.trim()).filter(Boolean);
+  const countEl = $('linkCount');
+  if (countEl) {
+    countEl.hidden = lines.length < 2;
+    countEl.textContent = t('form.linksCount', { n: lines.length });
+  }
   const box = $('preview');
+  if (lines.length > 1) {
+    box.hidden = true;
+    $('playlistPanel').hidden = true;
+    playlistEntries = [];
+    playlistSelected.clear();
+    return;
+  }
+  const url = lines[0] || '';
   const isSearch = url.length > 1 && !/^https?:\/\//i.test(url);
   if (!url) {
     box.hidden = true;

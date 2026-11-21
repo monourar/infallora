@@ -661,6 +661,15 @@ body.drag-active::after {
   background: var(--accent-soft);
   pointer-events: none;
 }
+#urlInput {
+  resize: vertical;
+  min-height: 46px;
+  max-height: 140px;
+  line-height: 1.5;
+  padding-block: 13px;
+}
+#linkCount { color: var(--accent); font-weight: 600; }
+
 .playlist-search-wrap { position: relative; margin: 8px 0; }
 .playlist-search-wrap input { padding-inline-start: 36px; height: 38px; font-size: 12px; }
 html[data-theme="dark"] img.glass-icon { filter: invert(1) hue-rotate(180deg); }
@@ -672,7 +681,7 @@ html[data-theme="dark"] .primary-btn img.glass-icon,
 html[data-theme="dark"] .preset-chip.active img.glass-icon { filter: none; }
 
 .input-wrap { position: relative; }
-.input-wrap input { padding-inline-start: 39px; padding-inline-end: 46px; }
+.input-wrap input, .input-wrap textarea { padding-inline-start: 39px; padding-inline-end: 46px; }
 .input-icon {
   position: absolute; inset-inline-start: 13px; top: 50%;
   transform: translateY(-50%);

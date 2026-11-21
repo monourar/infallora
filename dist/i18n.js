@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.3.2';
+  const VERSION = window.INFALLORA_VERSION || '0.4.0';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -22,6 +22,8 @@
     'form.auto': { en: 'Auto', ar: 'تلقائي' },
     'form.playlist': { en: 'Playlist', ar: 'قائمة تشغيل' },
     'form.mediaLink': { en: 'Media link', ar: 'رابط الوسائط' },
+    'form.mediaPlaceholder': { en: 'Paste one link, or several — one per line (Ctrl+Enter to download)', ar: 'الصق رابطًا أو عدة روابط — كل رابط في سطر (Ctrl+Enter للتنزيل)' },
+    'form.linksCount': { en: '{n} links', ar: '{n} روابط' },
     'form.paste': { en: 'Paste link', ar: 'لصق الرابط' },
     'form.saveTo': { en: 'Save to', ar: 'حفظ إلى' },
     'form.chooseFolder': { en: 'Choose folder', ar: 'اختيار مجلد' },

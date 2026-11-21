@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  build-windows:
     runs-on: windows-latest
     steps:
       - name: Check out source
@@ -44,43 +44,110 @@ jobs:
           }
           $z.Dispose()
 
-      - name: Build signed installer + latest.json
+      - name: Build signed installer
         shell: pwsh
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: npx tauri build
 
-      - name: Generate latest.json
-        shell: pwsh
-        run: |
-          $version = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
-          $sigPath = "src-tauri/target/release/bundle/nsis/Infallora_${version}_x64-setup.exe.sig"
-          $signature = (Get-Content $sigPath -Raw).Trim()
-          $url = "https://github.com/monourar/infallora/releases/download/v${version}/Infallora_${version}_x64-setup.exe"
-          $payload = @{
-            version  = $version
-            notes    = "Infallora $version"
-            pub_date = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-            platforms = @{
-              "windows-x86_64" = @{
-                signature = $signature
-                url       = $url
-              }
-            }
-          } | ConvertTo-Json -Depth 6
-          $payload | Set-Content "src-tauri/target/release/bundle/latest.json" -Encoding UTF8
-          Get-Content "src-tauri/target/release/bundle/latest.json"
+      - name: Upload Windows bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-windows
+          path: src-tauri/target/release/bundle/
 
-      - name: List artifacts
-        shell: pwsh
-        run: Get-ChildItem -Recurse src-tauri/target/release/bundle | Select-Object FullName, Length
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file \
+            libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Tauri CLI
+        run: npm install --no-save @tauri-apps/cli
+
+      - name: Download yt-dlp for Linux
+        run: |
+          curl -L --retry 3 -o yt-dlp.exe https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux
+          chmod +x yt-dlp.exe
+
+      - name: Download ffmpeg for Linux
+        run: |
+          curl -L --retry 3 -o ffmpeg.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+          mkdir -p /tmp/ffbin
+          tar -xf ffmpeg.tar.xz -C /tmp/ffbin --strip-components=1
+          cp /tmp/ffbin/ffmpeg ffmpeg.exe
+          cp /tmp/ffbin/ffprobe ffprobe.exe
+          chmod +x ffmpeg.exe ffprobe.exe
+
+      - name: Build signed AppImage + deb
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npx tauri build --target x86_64-unknown-linux-gnu --bundles appimage,deb
+
+      - name: Upload Linux bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-linux
+          path: src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/
+
+  publish:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Download bundles
+        uses: actions/download-artifact@v4
+        with:
+          path: bundles
+
+      - name: Generate latest.json
+        shell: bash
+        run: |
+          VERSION=$(jq -r .version src-tauri/tauri.conf.json)
+          WIN_SIG=$(cat "bundles/bundle-windows/nsis/Infallora_${VERSION}_x64-setup.exe.sig")
+          WIN_URL="https://github.com/monourar/infallora/releases/download/v${VERSION}/Infallora_${VERSION}_x64-setup.exe"
+          APPIMAGE=$(find bundles/bundle-linux/appimage -name '*.AppImage' | head -1)
+          APPIMAGE_NAME=$(basename "$APPIMAGE")
+          LINUX_SIG=$(cat "${APPIMAGE}.sig")
+          LINUX_URL="https://github.com/monourar/infallora/releases/download/v${VERSION}/${APPIMAGE_NAME}"
+          PUB_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          jq -n \
+            --arg v "$VERSION" \
+            --arg ws "$WIN_SIG" --arg wu "$WIN_URL" \
+            --arg ls "$LINUX_SIG" --arg lu "$LINUX_URL" \
+            --arg pd "$PUB_DATE" \
+            '{version:$v,notes:("Infallora "+$v),pub_date:$pd,platforms:{"windows-x86_64":{signature:$ws,url:$wu},"linux-x86_64":{signature:$ls,url:$lu}}}' \
+            > latest.json
+          cat latest.json
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            src-tauri/target/release/bundle/nsis/*.exe
-            src-tauri/target/release/bundle/nsis/*.sig
-            src-tauri/target/release/bundle/latest.json
+            bundles/bundle-windows/nsis/*.exe
+            bundles/bundle-windows/nsis/*.sig
+            bundles/bundle-linux/appimage/*.AppImage
+            bundles/bundle-linux/appimage/*.sig
+            bundles/bundle-linux/deb/*.deb
+            latest.json

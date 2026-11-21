@@ -5,7 +5,7 @@
 <h1 align="center">Infallora</h1>
 
 <p align="center">
-  A fast, private media downloader for Windows. Liquid-glass UI, playlist support,
+  A fast, private media downloader for Windows and Linux. Liquid-glass UI, playlist support,
   full format control, nine languages, and self-updating engines.
 </p>
 
@@ -24,7 +24,7 @@
 <p align="center">
   <a href="https://github.com/monourar/infallora/releases/latest"><img src="https://img.shields.io/github/v/release/monourar/infallora?style=flat-square&color=7C3AED" alt="Latest release"></a>
   <a href="https://github.com/monourar/infallora/releases"><img src="https://img.shields.io/github/downloads/monourar/infallora/total?style=flat-square&color=7C3AED" alt="Downloads"></a>
-  <img src="https://img.shields.io/badge/platform-Windows-0078D6?style=flat-square" alt="Windows">
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-0078D6?style=flat-square" alt="Windows and Linux">
   <img src="https://img.shields.io/badge/built%20with-Rust%20%2B%20Tauri-orange?style=flat-square" alt="Rust and Tauri">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
 </p>
@@ -81,7 +81,8 @@ Arabic interface with automatic RTL layout:
 <img src="docs/icons/ffmpeg.svg" alt="" width="16"> Quality up to 8K/4K, down to *smallest file*
 
 <img src="docs/icons/ffmpeg.svg" alt="" width="16"> Container (MP4/WebM/MKV), codec (H.264/AV1/VP9), bitrate and audio format control
-- Playlist browsing with thumbnails, select all/none, one row per video
+- Multiple links at once — paste several URLs, one per line
+- Playlist browsing and YouTube keyword search with thumbnails, select all/none, one row per video
 - Subtitles (10 language shortcuts + any ISO code), embedded metadata, thumbnail sidecars
 - Automatic retry on transient HTTP 403 errors
 
