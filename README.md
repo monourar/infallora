@@ -55,7 +55,7 @@ Arabic interface with automatic RTL layout:
 - **Liquid-glass interface** — light/dark themes, reduced-motion mode, and in-window settings
 - **Six languages** — English, العربية, Français, Español, Deutsch and Türkçe, with automatic RTL mirroring for Arabic
 - **Private videos** — automatic `cookies.txt` detection, no settings needed for public content
-- **Self-updating** — signed updates delivered through GitHub Releases
+- **Self-updating app and engines** — signed app updates via GitHub Releases, plus automatic yt-dlp updates on startup (or on demand in **Settings → updates → engines**)
 - **Local only** — no account, no telemetry, no upload, no cloud
 
 ---

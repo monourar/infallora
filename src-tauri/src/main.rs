@@ -76,6 +76,7 @@ pub struct AppSettings {
     cookies_file: String,
     auto_update: bool,
     language: String,
+    engine_auto_update: bool,
 }
 
 impl Default for AppSettings {
@@ -101,6 +102,7 @@ impl Default for AppSettings {
             cookies_file: String::new(),
             auto_update: true,
             language: "system".into(),
+            engine_auto_update: true,
         }
     }
 }
@@ -191,6 +193,106 @@ fn find_ffmpeg_dir(ytdlp: &Path) -> Option<String> {
         }
     }
     None
+}
+
+fn engine_dir() -> Option<PathBuf> {
+    if let Some(p) = find_ytdlp() {
+        if let Some(d) = p.parent() {
+            return Some(d.to_path_buf());
+        }
+    }
+    let exe = std::env::current_exe().ok()?;
+    let dir = exe.parent()?;
+    let up = dir.join("_up_");
+    Some(if up.exists() { up } else { dir.to_path_buf() })
+}
+
+fn command_first_line(program: &Path, arg: &str) -> Option<String> {
+    let out = hidden_command(&program.to_string_lossy()).arg(arg).output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    let text = String::from_utf8_lossy(&out.stdout);
+    Some(text.lines().next().unwrap_or("").trim().to_string())
+}
+
+fn local_ytdlp_version() -> String {
+    find_ytdlp()
+        .and_then(|p| command_first_line(&p, "--version"))
+        .unwrap_or_default()
+}
+
+fn http_client() -> Result<reqwest::blocking::Client, String> {
+    reqwest::blocking::Client::builder()
+        .user_agent("Infallora")
+        .timeout(std::time::Duration::from_secs(30))
+        .build()
+        .map_err(|e| e.to_string())
+}
+
+fn latest_ytdlp_version() -> Result<String, String> {
+    let text = http_client()?
+        .get("https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest")
+        .send()
+        .map_err(|e| e.to_string())?
+        .text()
+        .map_err(|e| e.to_string())?;
+    let json: serde_json::Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+    json.get("tag_name")
+        .and_then(|v| v.as_str())
+        .map(|s| s.trim_start_matches('v').trim().to_string())
+        .filter(|s| !s.is_empty())
+        .ok_or_else(|| "no version in release".to_string())
+}
+
+fn download_ytdlp() -> Result<String, String> {
+    let dir = engine_dir().ok_or_else(|| "engine folder not found".to_string())?;
+    let target = dir.join("yt-dlp.exe");
+    let tmp = dir.join("yt-dlp.new.exe");
+
+    let bytes = http_client()?
+        .get("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe")
+        .send()
+        .map_err(|e| e.to_string())?
+        .bytes()
+        .map_err(|e| e.to_string())?;
+    if bytes.len() < 1_000_000 {
+        return Err("download too small".to_string());
+    }
+    std::fs::write(&tmp, &bytes).map_err(|e| e.to_string())?;
+
+    let version = command_first_line(&tmp, "--version")
+        .ok_or_else(|| "downloaded file is not usable".to_string())?;
+
+    if target.exists() {
+        std::fs::remove_file(&target).map_err(|e| e.to_string())?;
+    }
+    std::fs::rename(&tmp, &target).map_err(|e| e.to_string())?;
+    Ok(version)
+}
+
+fn downloads_active(state: &State<'_, DownloadState>) -> bool {
+    state
+        .items
+        .lock()
+        .map(|list| list.iter().any(|i| i.status == "downloading" || i.status == "queued"))
+        .unwrap_or(false)
+}
+
+#[tauri::command]
+fn engine_versions() -> serde_json::Value {
+    serde_json::json!({
+        "current": local_ytdlp_version(),
+        "latest": latest_ytdlp_version().unwrap_or_default(),
+    })
+}
+
+#[tauri::command]
+fn update_engine(state: State<'_, DownloadState>) -> Result<String, String> {
+    if downloads_active(&state) {
+        return Err("busy".to_string());
+    }
+    download_ytdlp()
 }
 
 fn build_args(
@@ -1049,6 +1151,24 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(DownloadState::default())
+        .setup(|_app| {
+            std::thread::spawn(|| {
+                std::thread::sleep(std::time::Duration::from_secs(8));
+                if !get_settings().engine_auto_update {
+                    return;
+                }
+                let current = local_ytdlp_version();
+                let latest = match latest_ytdlp_version() {
+                    Ok(v) => v,
+                    Err(_) => return,
+                };
+                if latest.is_empty() || current == latest {
+                    return;
+                }
+                let _ = download_ytdlp();
+            });
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             default_dir,
             get_downloads,
@@ -1066,6 +1186,8 @@ fn main() {
             pick_folder,
             pick_cookies_file,
             list_playlist,
+            engine_versions,
+            update_engine,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Infallora");

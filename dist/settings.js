@@ -25,6 +25,7 @@ const state = {
   extra_args: '',
   auto_update: true,
   language: 'system',
+  engine_auto_update: true,
 };
 
 function applyTheme(theme) {
@@ -110,6 +111,7 @@ function fill(settings) {
   setSeg('concurrent', state.max_concurrent);
   setSeg('saving', state.saving_method);
   setSeg('autoUpdate', state.auto_update ? 'on' : 'off');
+  setSeg('engineUpdate', state.engine_auto_update ? 'on' : 'off');
   if ($('languageSelect')) $('languageSelect').value = state.language || 'system';
   setToggle('reduceMotion', state.reduce_motion);
   setToggle('h265', state.allow_h265);
@@ -144,6 +146,7 @@ function collect() {
     extra_args: $('extraArgs').value.trim(),
     auto_update: state.auto_update,
     language: state.language,
+    engine_auto_update: state.engine_auto_update,
   };
 }
 
@@ -183,6 +186,7 @@ document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
     if (group === 'concurrent') state.max_concurrent = Number(value);
     if (group === 'saving') state.saving_method = value;
     if (group === 'autoUpdate') state.auto_update = value === 'on';
+    if (group === 'engineUpdate') state.engine_auto_update = value === 'on';
   });
 });
 
@@ -249,7 +253,7 @@ $('resetBtn').addEventListener('click', () => {
   fill({
     theme: 'system', reduce_motion: false, quality: 'best', codec: 'h264', format: 'auto',
     allow_h265: false, bitrate: 'best', audio_format: 'mp3', filename_style: 'basic',
-    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system',
+    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system', engine_auto_update: true,
   });
   window.I18n.setLanguage('system');
   $('setStatus').textContent = window.I18n.t('set.restored');

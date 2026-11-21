@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.2.6';
+  const VERSION = window.INFALLORA_VERSION || '0.2.7';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -176,6 +176,19 @@
     'set.save': { en: 'save settings', ar: 'حفظ الإعدادات' },
     'set.saved': { en: 'Saved on this PC.', ar: 'تم الحفظ على هذا الجهاز.' },
     'set.restored': { en: 'Defaults restored. Save to keep.', ar: 'تمت استعادة الإعدادات الافتراضية. احفظ للاحتفاظ بها.' },
+
+    // engines
+    'set.engines': { en: 'engines', ar: 'المحركات' },
+    'set.engineCurrent': { en: 'yt-dlp: {v}', ar: 'yt-dlp: {v}' },
+    'set.engineLatest': { en: 'Latest: {v}', ar: 'الأحدث: {v}' },
+    'set.engineAuto': { en: 'update engines on startup', ar: 'تحديث المحركات عند التشغيل' },
+    'set.updateEngine': { en: 'update yt-dlp', ar: 'تحديث yt-dlp' },
+    'set.engineIdle': { en: 'Not checked yet.', ar: 'لم يتم الفحص بعد.' },
+    'set.engineChecking': { en: 'Checking…', ar: 'جارٍ الفحص…' },
+    'set.engineUpdated': { en: 'yt-dlp updated to {v}.', ar: 'تم تحديث yt-dlp إلى {v}.' },
+    'set.engineCurrentAlready': { en: 'Already up to date.', ar: 'أنت تستخدم أحدث إصدار.' },
+    'set.engineFailed': { en: 'Update failed: {e}', ar: 'فشل التحديث: {e}' },
+    'set.engineBusy': { en: 'Finish active downloads first.', ar: 'أنهِ التنزيلات النشطة أولًا.' },
 
     // updater
     'update.checking': { en: 'Checking for updates…', ar: 'جارٍ البحث عن تحديثات…' },
