@@ -7,6 +7,8 @@
 
   let pendingUpdate = null;
   let busy = false;
+  let autoInstallTimer = 0;
+  let autoUpdateEnabled = true;
 
   class ProgressChannel {
     constructor(onMessage) {
@@ -16,9 +18,7 @@
         this.handler(raw && raw.message);
       });
     }
-    toJSON() {
-      return `__CHANNEL__:${this.id}`;
-    }
+    toJSON() { return `__CHANNEL__:${this.id}`; }
   }
 
   function status(text, isError) {
@@ -35,6 +35,26 @@
       const fill = $('updateBar');
       if (fill) fill.style.width = '0%';
     }
+  }
+
+  function showPopup(update) {
+    const dialog = $('updateDialog');
+    if (!dialog) return;
+    $('updateDialogBody').textContent = t('update.available', {
+      v: update.version, c: update.currentVersion,
+    });
+    const note = $('updateDialogNote');
+    if (note) {
+      note.textContent = autoUpdateEnabled
+        ? t('update.autoInstalling')
+        : t('update.popupNote');
+    }
+    dialog.hidden = false;
+  }
+
+  function hidePopup() {
+    const dialog = $('updateDialog');
+    if (dialog) dialog.hidden = true;
   }
 
   async function check(announce) {
@@ -56,6 +76,24 @@
       status(t('update.available', { v: update.version, c: update.currentVersion }));
       const install = $('installUpdateBtn');
       if (install) install.hidden = false;
+
+      // Always show the popup
+      showPopup(update);
+
+      // Native notification
+      invoke('notify', {
+        title: t('update.popupTitle'),
+        body: t('update.available', { v: update.version, c: update.currentVersion }),
+        path: '',
+      }).catch(() => {});
+
+      // Auto-install only for the startup check, not manual checks
+      if (autoUpdateEnabled && !announce) {
+        window.clearTimeout(autoInstallTimer);
+        autoInstallTimer = window.setTimeout(() => {
+          if (pendingUpdate === update) install();
+        }, 6000);
+      }
     } catch (e) {
       status(t('update.checkFailed', { e: String(e) }), true);
     } finally {
@@ -67,6 +105,8 @@
   async function install() {
     if (!pendingUpdate || busy) return;
     busy = true;
+    window.clearTimeout(autoInstallTimer);
+    hidePopup();
     const install = $('installUpdateBtn');
     if (install) install.disabled = true;
     showProgress(true);
@@ -109,15 +149,22 @@
   const installBtn = $('installUpdateBtn');
   if (checkBtn) checkBtn.addEventListener('click', () => check(true));
   if (installBtn) installBtn.addEventListener('click', install);
+  const nowBtn = $('updateNowBtn');
+  const laterBtn = $('updateLaterBtn');
+  if (nowBtn) nowBtn.addEventListener('click', () => install());
+  if (laterBtn) laterBtn.addEventListener('click', () => {
+    window.clearTimeout(autoInstallTimer);
+    hidePopup();
+  });
 
-  (async function autoCheck() {
+  (async function startup() {
     try {
       const settings = await invoke('get_settings');
-      if (settings && settings.auto_update) {
-        window.setTimeout(() => check(false), 3000);
-      }
+      autoUpdateEnabled = !settings || settings.auto_update !== false;
+      // Always check on startup; toggle controls auto-install only
+      window.setTimeout(() => check(false), 3000);
     } catch (_) {
-      /* settings unavailable; skip auto-check */
+      window.setTimeout(() => check(false), 3000);
     }
   })();
 

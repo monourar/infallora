@@ -229,7 +229,7 @@
   <div id="settingsOverlay" class="settings-overlay" hidden>
     <div class="set-shell">
       <aside class="set-sidebar">
-        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.4.4</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
+        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.4.5</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
         <nav class="set-nav" aria-label="Settings sections">
           <button class="set-nav-item active" data-section="appearance" type="button">
             <img class="icon glass-icon" src="icons/sun.svg" alt="">
@@ -511,8 +511,9 @@
           <div class="set-group">
             <h3 data-i18n="set.appUpdates">app updates</h3>
             <p class="set-help" data-i18n="set.currentVersion">Current version: 0.2.2</p>
+            <p class="set-help" data-i18n="set.autoUpdateHelp">When on, new versions install automatically. You still get a popup.</p>
             <div class="set-row">
-              <div class="set-row-head"><span class="set-row-label">check on startup</span></div>
+              <div class="set-row-head"><span class="set-row-label" data-i18n="set.autoUpdateApp">auto-update app</span></div>
               <div class="set-seg" role="group" aria-label="Check on startup">
                 <button type="button" data-group="autoUpdate" data-value="on">on</button>
                 <button type="button" data-group="autoUpdate" data-value="off">off</button>
@@ -581,8 +582,20 @@
       </div>
     </div>
   </div>
+
+  <div id="updateDialog" class="modal-overlay" hidden>
+    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="updateDialogTitle">
+      <h3 id="updateDialogTitle" data-i18n="update.popupTitle">Update available</h3>
+      <p id="updateDialogBody" class="set-help"></p>
+      <p id="updateDialogNote" class="set-help" data-i18n="update.popupNote"></p>
+      <div class="modal-actions">
+        <button id="updateNowBtn" class="set-action primary" type="button" data-i18n="update.installNow">Install now</button>
+        <button id="updateLaterBtn" class="set-action" type="button" data-i18n="update.later">Later</button>
+      </div>
+    </div>
+  </div>
   <div id="toasts" class="toasts" aria-live="polite" aria-label="Notifications"></div>
-  <script>window.INFALLORA_VERSION = '0.4.4';</script>
+  <script>window.INFALLORA_VERSION = '0.4.5';</script>
   <script src="translations.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

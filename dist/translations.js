@@ -184,7 +184,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "Le fichier existe déjà",
     "exists.overwrite": "Remplacer",
     "exists.copy": "Télécharger une copie",
-    "form.linkHelp": "Ctrl+Entrée pour télécharger · Maj+Entrée pour une nouvelle ligne"
+    "form.linkHelp": "Ctrl+Entrée pour télécharger · Maj+Entrée pour une nouvelle ligne",
+    "set.autoUpdateApp": "mise à jour auto",
+    "set.autoUpdateHelp": "Si activé, les nouvelles versions s’installent automatiquement. Une fenêtre s’affiche quand même.",
+    "update.popupTitle": "Mise à jour disponible",
+    "update.popupNote": "Installez maintenant, ou plus tard dans Paramètres → mises à jour.",
+    "update.installNow": "Installer maintenant",
+    "update.later": "Plus tard",
+    "update.autoInstalling": "Installation automatique dans quelques secondes…"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -371,7 +378,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "El archivo ya existe",
     "exists.overwrite": "Sobrescribir",
     "exists.copy": "Descargar una copia",
-    "form.linkHelp": "Ctrl+Enter para descargar · Shift+Enter para nueva línea"
+    "form.linkHelp": "Ctrl+Enter para descargar · Shift+Enter para nueva línea",
+    "set.autoUpdateApp": "actualización automática",
+    "set.autoUpdateHelp": "Si está activado, las versiones nuevas se instalan automáticamente. Igual verás una ventana.",
+    "update.popupTitle": "Actualización disponible",
+    "update.popupNote": "Instala ahora o después en Ajustes → actualizaciones.",
+    "update.installNow": "Instalar ahora",
+    "update.later": "Después",
+    "update.autoInstalling": "Instalando automáticamente en unos segundos…"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -558,7 +572,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "Datei existiert bereits",
     "exists.overwrite": "Überschreiben",
     "exists.copy": "Kopie herunterladen",
-    "form.linkHelp": "Strg+Enter zum Download · Umschalt+Enter für neue Zeile"
+    "form.linkHelp": "Strg+Enter zum Download · Umschalt+Enter für neue Zeile",
+    "set.autoUpdateApp": "Auto-Update",
+    "set.autoUpdateHelp": "Wenn aktiv, werden neue Versionen automatisch installiert. Du siehst trotzdem einPopup.",
+    "update.popupTitle": "Update verfügbar",
+    "update.popupNote": "Jetzt installieren oder später unter Einstellungen → Updates.",
+    "update.installNow": "Jetzt installieren",
+    "update.later": "Später",
+    "update.autoInstalling": "Auto-Installation in wenigen Sekunden…"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -745,7 +766,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "Dosya zaten var",
     "exists.overwrite": "Üzerine yaz",
     "exists.copy": "Bir kopyasını indir",
-    "form.linkHelp": "İndirmek için Ctrl+Enter · yeni satır için Shift+Enter"
+    "form.linkHelp": "İndirmek için Ctrl+Enter · yeni satır için Shift+Enter",
+    "set.autoUpdateApp": "otomatik güncelleme",
+    "set.autoUpdateHelp": "Açıksa yeni sürümler otomatik kurulur. Yine de bir pencere göreceksiniz.",
+    "update.popupTitle": "Güncelleme mevcut",
+    "update.popupNote": "Şimdi kurun veya Ayarlar → güncellemeler bölümünden sonra.",
+    "update.installNow": "Şimdi kur",
+    "update.later": "Sonra",
+    "update.autoInstalling": "Birkaç saniye içinde otomatik kuruluyor…"
   },
   "pt": {
     "app.subtitle": "Downloader de vídeos e áudio",
@@ -932,7 +960,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "O arquivo já existe",
     "exists.overwrite": "Substituir",
     "exists.copy": "Baixar uma cópia",
-    "form.linkHelp": "Ctrl+Enter para baixar · Shift+Enter para nova linha"
+    "form.linkHelp": "Ctrl+Enter para baixar · Shift+Enter para nova linha",
+    "set.autoUpdateApp": "atualização automática",
+    "set.autoUpdateHelp": "Quando ativo, novas versões são instaladas automaticamente. Você ainda vê um popup.",
+    "update.popupTitle": "Atualização disponível",
+    "update.popupNote": "Instale agora ou depois em Configurações → atualizações.",
+    "update.installNow": "Instalar agora",
+    "update.later": "Depois",
+    "update.autoInstalling": "Instalando automaticamente em alguns segundos…"
   },
   "ru": {
     "app.subtitle": "Загрузчик видео и аудио",
@@ -1119,7 +1154,14 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "Файл уже существует",
     "exists.overwrite": "Перезаписать",
     "exists.copy": "Скачать копию",
-    "form.linkHelp": "Ctrl+Enter для загрузки · Shift+Enter для новой строки"
+    "form.linkHelp": "Ctrl+Enter для загрузки · Shift+Enter для новой строки",
+    "set.autoUpdateApp": "автообновление",
+    "set.autoUpdateHelp": "Если включено, новые версии устанавливаются автоматически. Всплывающее окно всё равно появится.",
+    "update.popupTitle": "Доступно обновление",
+    "update.popupNote": "Установите сейчас или позже в Настройки → обновления.",
+    "update.installNow": "Установить сейчас",
+    "update.later": "Позже",
+    "update.autoInstalling": "Автоустановка через несколько секунд…"
   },
   "zh": {
     "app.subtitle": "视频和音频下载器",
@@ -1306,6 +1348,13 @@ window.INFALLORA_TRANSLATIONS = {
     "exists.title": "文件已存在",
     "exists.overwrite": "覆盖",
     "exists.copy": "下载副本",
-    "form.linkHelp": "Ctrl+Enter 下载 · Shift+Enter 换行"
+    "form.linkHelp": "Ctrl+Enter 下载 · Shift+Enter 换行",
+    "set.autoUpdateApp": "自动更新",
+    "set.autoUpdateHelp": "开启后新版本会自动安装。你仍会看到弹窗提示。",
+    "update.popupTitle": "有可用更新",
+    "update.popupNote": "立即安装，或稍后在设置 → 更新中安装。",
+    "update.installNow": "立即安装",
+    "update.later": "稍后",
+    "update.autoInstalling": "几秒后自动安装…"
   }
 };

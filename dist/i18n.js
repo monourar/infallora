@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.4.4';
+  const VERSION = window.INFALLORA_VERSION || '0.4.5';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -207,6 +207,13 @@
     'set.engineFailed': { en: 'Update failed: {e}', ar: 'فشل التحديث: {e}' },
     'set.engineBusy': { en: 'Finish active downloads first.', ar: 'أنهِ التنزيلات النشطة أولًا.' },
 
+    'set.autoUpdateApp': { en: 'auto-update app', ar: 'تحديث التطبيق تلقائيًا' },
+    'set.autoUpdateHelp': { en: 'When on, new versions install automatically. You still get a popup.', ar: 'عند التشغيل، تُثبَّت الإصدارات الجديدة تلقائيًا. ستحصل أيضًا على نافذة منبثقة.' },
+    'update.popupTitle': { en: 'Update available', ar: 'تحديث متاح' },
+    'update.popupNote': { en: 'Install now, or later from Settings → updates.', ar: 'ثبّت الآن، أو لاحقًا من الإعدادات ← التحديثات.' },
+    'update.installNow': { en: 'Install now', ar: 'تثبيت الآن' },
+    'update.autoInstalling': { en: 'Installing automatically in a few seconds…', ar: 'سيتم التثبيت تلقائيًا خلال ثوانٍ…' },
+    'update.later': { en: 'Later', ar: 'لاحقًا' },
     // updater
     'update.checking': { en: 'Checking for updates…', ar: 'جارٍ البحث عن تحديثات…' },
     'update.current': { en: 'You are up to date.', ar: 'أنت تستخدم أحدث إصدار.' },
