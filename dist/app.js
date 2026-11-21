@@ -388,6 +388,7 @@ function render(items) {
         body: item.status === 'done'
           ? t('toast.finished', { title: item.title })
           : t('toast.failed', { title: item.title }),
+        path: item.path || '',
       }).catch(() => {});
       const needsSignIn = item.status === 'error' && /Video unavailable/i.test(item.message || '');
       toast(
@@ -413,6 +414,37 @@ async function poll() {
     console.warn('poll failed', e);
   }
 }
+
+function nextCopyStyle(filename, existingStyle) {
+  const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
+  const stem = filename.slice(0, filename.length - ext.length);
+  for (let n = 1; n < 100; n++) {
+    if (!lastResolvedPaths.some((p) => p.endsWith(` (${n})${ext}`))) {
+      return `copy:${n}`;
+    }
+  }
+  return 'copy:99';
+}
+
+async function confirmExisting(filename) {
+  return new Promise((resolve) => {
+    const dialog = $('existsDialog');
+    $('existsName').textContent = filename;
+    dialog.hidden = false;
+    const done = (answer) => {
+      dialog.hidden = true;
+      $('existsOverwrite').onclick = null;
+      $('existsCopy').onclick = null;
+      $('existsCancel').onclick = null;
+      resolve(answer);
+    };
+    $('existsOverwrite').onclick = () => done('overwrite');
+    $('existsCopy').onclick = () => done('copy');
+    $('existsCancel').onclick = () => done('cancel');
+  });
+}
+
+let lastResolvedPaths = [];
 
 async function startDownload() {
   const raw = $('urlInput').value.trim();
@@ -442,6 +474,30 @@ async function startDownload() {
 
   btn.disabled = true;
   btn.classList.add('is-loading');
+  const targets = (playlistValue && playlistEntries.length)
+    ? playlistEntries.filter((e) => playlistSelected.has(e.index)).map((e) => ({ url: e.url || raw, label: e.title }))
+    : links.map((l) => ({ url: l, label: '' }));
+  const styles = [];
+  lastResolvedPaths = [];
+  try {
+    for (const target of targets) {
+      let style = filenameValue;
+      try {
+        const info = await invoke('resolve_output', { outDir, url: target.url, filenameStyle: filenameValue });
+        if (info && info.exists) {
+          lastResolvedPaths.push(info.path || info.filename || '');
+          const answer = await confirmExisting(info.filename || target.label || target.url);
+          if (answer === 'cancel') {
+            btn.disabled = false;
+            btn.classList.remove('is-loading');
+            return;
+          }
+          if (answer === 'copy') style = nextCopyStyle(info.filename || '', filenameValue);
+        }
+      } catch (_) { /* resolution is best-effort */ }
+      styles.push(style);
+    }
+  } catch (_) { /* resolution is best-effort */ }
   const common = {
     mode, quality, format,
     bitrate: bitrateValue,
@@ -464,22 +520,22 @@ async function startDownload() {
     if (playlistValue && playlistEntries.length) {
       const chosen = playlistEntries.filter((e) => playlistSelected.has(e.index));
       added = chosen.length;
-      await Promise.all(chosen.map((entry) => {
-        let videoUrl = entry.url || url;
-        if (!/^https?:\/\//i.test(videoUrl) && /youtube\.com/i.test(url)) {
+      await Promise.all(chosen.map((entry, i) => {
+        let videoUrl = entry.url || raw;
+        if (!/^https?:\/\//i.test(videoUrl) && /youtube\.com/i.test(raw)) {
           videoUrl = `https://www.youtube.com/watch?v=${videoUrl}`;
         }
-        return invoke('start_download', { ...common, url: videoUrl, playlist: false, label: entry.title });
+        return invoke('start_download', { ...common, filename_style: styles[i] || filenameValue, url: videoUrl, playlist: false, label: entry.title });
       }));
     } else if (links.length > 1) {
       added = links.length;
-      await Promise.all(links.map((link) =>
-        invoke('start_download', { ...common, url: link, playlist: false, label: '' })
+      await Promise.all(links.map((link, i) =>
+        invoke('start_download', { ...common, filename_style: styles[i] || filenameValue, url: link, playlist: false, label: '' })
       ));
     } else {
       const previewLabel = $('previewTitle').textContent.trim();
       const label = previewLabel && $('previewTitle').dataset.placeholder !== '1' ? previewLabel : '';
-      await invoke('start_download', { ...common, url: links[0], playlist: playlistValue, label });
+      await invoke('start_download', { ...common, filename_style: styles[0] || filenameValue, url: links[0], playlist: playlistValue, label });
     }
     $('urlInput').value = '';
     $('preview').hidden = true;

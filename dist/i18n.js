@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.4.0';
+  const VERSION = window.INFALLORA_VERSION || '0.4.1';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -86,6 +86,9 @@
     'hint.dropped': { en: 'Link dropped.', ar: 'تم إسقاط الرابط.' },
     'hint.format': { en: 'Format {id} selected.', ar: 'تم اختيار الصيغة {id}.' },
     'hint.dirFail': { en: 'Could not read the default download folder.', ar: 'تعذّر قراءة مجلد التنزيل الافتراضي.' },
+    'exists.title': { en: 'File already exists', ar: 'الملف موجود بالفعل' },
+    'exists.overwrite': { en: 'Overwrite', ar: 'استبدال' },
+    'exists.copy': { en: 'Download a copy', ar: 'تنزيل نسخة' },
     'toast.finished': { en: '{title} finished', ar: 'اكتمل تنزيل {title}' },
     'toast.failed': { en: '{title} failed', ar: 'فشل تنزيل {title}' },
     'toast.signIn': { en: 'This video needs YouTube sign-in', ar: 'هذا الفيديو يتطلب تسجيل الدخول إلى يوتيوب' },

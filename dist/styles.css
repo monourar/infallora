@@ -651,6 +651,27 @@ img.icon { display: block; object-fit: contain; flex: none; }
 .item[draggable="true"] { cursor: grab; }
 .item.dragging { opacity: .45; }
 .item.drag-over { box-shadow: inset 0 2px 0 var(--accent); }
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, .45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  width: min(92vw, 380px);
+  padding: 22px;
+  border-radius: var(--radius);
+}
+.modal h3 { margin: 0 0 4px; font-size: 17px; }
+.modal .set-help { word-break: break-all; }
+.modal-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.modal-actions .set-action { width: 100%; }
+
 body.drag-active::after {
   content: "";
   position: fixed;

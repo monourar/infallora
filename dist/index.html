@@ -228,7 +228,7 @@
   <div id="settingsOverlay" class="settings-overlay" hidden>
     <div class="set-shell">
       <aside class="set-sidebar">
-        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.4.0</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
+        <div class="set-side-head"><img class="set-side-logo" src="logo.png" alt=""><div><strong>settings</strong><span><span dir="ltr">v0.4.1</span> · <span data-i18n="set.version-suffix">local</span></span></div></div>
         <nav class="set-nav" aria-label="Settings sections">
           <button class="set-nav-item active" data-section="appearance" type="button">
             <img class="icon glass-icon" src="icons/sun.svg" alt="">
@@ -569,8 +569,19 @@
       </div>
     </div>
   </div>
+  <div id="existsDialog" class="modal-overlay" hidden>
+    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="existsTitle">
+      <h3 id="existsTitle" data-i18n="exists.title">File already exists</h3>
+      <p id="existsName" class="set-help"></p>
+      <div class="modal-actions">
+        <button id="existsOverwrite" class="set-action" type="button" data-i18n="exists.overwrite">Overwrite</button>
+        <button id="existsCopy" class="set-action primary" type="button" data-i18n="exists.copy">Download a copy</button>
+        <button id="existsCancel" class="set-action" type="button" data-i18n="action.cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
   <div id="toasts" class="toasts" aria-live="polite" aria-label="Notifications"></div>
-  <script>window.INFALLORA_VERSION = '0.4.0';</script>
+  <script>window.INFALLORA_VERSION = '0.4.1';</script>
   <script src="translations.js"></script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

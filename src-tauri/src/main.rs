@@ -354,6 +354,31 @@ fn download_ytdlp() -> Result<String, String> {
     Ok(version)
 }
 
+fn find_recent_file(dir: &Path, hint: &str) -> Option<String> {
+    let entries = std::fs::read_dir(dir).ok()?;
+    let now = std::time::SystemTime::now();
+    let mut best: Option<(std::time::SystemTime, String)> = None;
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if !path.is_file() {
+            continue;
+        }
+        let name = path.file_name()?.to_string_lossy().into_owned();
+        if !hint.is_empty() && !name.contains(hint) {
+            continue;
+        }
+        let modified = entry.metadata().and_then(|m| m.modified()).ok()?;
+        let age = now.duration_since(modified).unwrap_or_default().as_secs();
+        if age > 600 {
+            continue;
+        }
+        if best.as_ref().map(|(t, _)| modified > *t).unwrap_or(true) {
+            best = Some((modified, path.to_string_lossy().into_owned()));
+        }
+    }
+    best.map(|(_, p)| p)
+}
+
 fn downloads_active(state: &State<'_, DownloadState>) -> bool {
     state
         .items
@@ -490,11 +515,15 @@ fn build_args(
         args.push("jpg".into());
     }
 
-    let name_template = match filename_style {
-        "pretty" => "%(title)s [%(resolution)s].%(ext)s",
-        "classic" => "%(uploader)s - %(title)s.%(ext)s",
-        "nerdy" => "%(id)s - %(title)s [%(format_id)s].%(ext)s",
-        _ => "%(title)s.%(ext)s",
+    let name_template = if let Some(n) = filename_style.strip_prefix("copy:") {
+        format!("%(title)s ({}).%(ext)s", n)
+    } else {
+        match filename_style {
+            "pretty" => "%(title)s [%(resolution)s].%(ext)s".into(),
+            "classic" => "%(uploader)s - %(title)s.%(ext)s".into(),
+            "nerdy" => "%(id)s - %(title)s [%(format_id)s].%(ext)s".into(),
+            _ => "%(title)s.%(ext)s".into(),
+        }
     };
     let template = PathBuf::from(out_dir).join(name_template);
     args.push("-o".into());
@@ -522,20 +551,20 @@ fn parse_progress(line: &str, item: &mut DownloadItem) {
         return;
     }
 
-    if line.starts_with("[download]") {
-        if let Some(rest) = line.split("Destination:").nth(1) {
-            let path = rest.trim().to_string();
-            if !path.is_empty() {
-                item.path = path.clone();
-                if let Some(name) = PathBuf::from(&path).file_stem() {
-                    let name = name.to_string_lossy().into_owned();
-                    if !name.is_empty() && item.title.starts_with("http") {
-                        item.title = name;
-                    }
+    if let Some(rest) = line.split("Destination:").nth(1) {
+        let path = rest.trim().to_string();
+        if !path.is_empty() {
+            item.path = path.clone();
+            if let Some(name) = PathBuf::from(&path).file_stem() {
+                let name = name.to_string_lossy().into_owned();
+                if !name.is_empty() && item.title.starts_with("http") {
+                    item.title = name;
                 }
             }
         }
+    }
 
+    if line.starts_with("[download]") {
         for token in line.split_whitespace() {
             if token.ends_with('%') {
                 if let Ok(value) = token.trim_end_matches('%').parse::<f64>() {
@@ -736,6 +765,12 @@ fn run_download(
             return;
         }
         let ok = final_status.map(|s| s.success()).unwrap_or(false);
+        if ok && i.path.is_empty() {
+            let hint: String = i.title.chars().take(20).collect();
+            if let Some(found) = find_recent_file(Path::new(&out_dir), &hint) {
+                i.path = found;
+            }
+        }
         if ok && (!i.path.is_empty() || i.percent >= 100.0) {
             i.status = "done".into();
             i.percent = 100.0;
@@ -1289,6 +1324,46 @@ fn list_playlist_blocking(url: &str) -> Result<Vec<PlaylistEntry>, String> {
 }
 
 #[tauri::command]
+fn resolve_output(out_dir: String, url: String, filename_style: String) -> Result<serde_json::Value, String> {
+    let ytdlp = find_ytdlp().ok_or_else(|| "yt-dlp.exe not found".to_string())?;
+    let style = if filename_style.starts_with("copy:") {
+        "basic".to_string()
+    } else {
+        filename_style
+    };
+    let name_template = match style.as_str() {
+        "pretty" => "%(title)s [%(resolution)s].%(ext)s",
+        "classic" => "%(uploader)s - %(title)s.%(ext)s",
+        "nerdy" => "%(id)s - %(title)s [%(format_id)s].%(ext)s",
+        _ => "%(title)s.%(ext)s",
+    };
+    let template = PathBuf::from(&out_dir).join(name_template);
+    let output = hidden_command(&ytdlp.to_string_lossy())
+        .args(["--js-runtimes", "node", "--print", "filename", "--skip-download", "--no-warnings"])
+        .arg("-o").arg(template.to_string_lossy().into_owned())
+        .arg(&url)
+        .args(extra_cookie_args())
+        .output()
+        .map_err(|e| e.to_string())?;
+    if !output.status.success() {
+        return Err(clean_error(&String::from_utf8_lossy(&output.stderr)));
+    }
+    let filename = String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(|l| l.trim())
+        .filter(|l| !l.is_empty())
+        .last()
+        .unwrap_or("")
+        .to_string();
+    let full = PathBuf::from(&out_dir).join(&filename);
+    Ok(serde_json::json!({
+        "filename": filename,
+        "path": full.to_string_lossy().into_owned(),
+        "exists": full.exists(),
+    }))
+}
+
+#[tauri::command]
 fn search_videos(query: String) -> Result<Vec<PlaylistEntry>, String> {
     let query = query.trim();
     if query.is_empty() {
@@ -1306,12 +1381,13 @@ async fn list_playlist(url: String) -> Result<Vec<PlaylistEntry>, String> {
 }
 
 #[tauri::command]
-async fn notify(app: AppHandle, title: String, body: String) -> Result<(), String> {
+async fn notify(app: AppHandle, title: String, body: String, path: String) -> Result<(), String> {
     use tauri_plugin_notification::NotificationExt;
     app.notification()
         .builder()
         .title(title)
         .body(body)
+        .extra("path", &path)
         .show()
         .map_err(|e| e.to_string())
 }
@@ -1334,6 +1410,18 @@ fn main() {
         .plugin(tauri_plugin_deep_link::init())
         .manage(DownloadState::default())
         .setup(|app| {
+            {
+                use tauri_plugin_notification::NotificationExt;
+                let _ = app.notification().on_action(|action| {
+                    if action.action_id() != "tap" { return; }
+                    let path = action
+                        .notification()
+                        .and_then(|n| n.extra().get("path"))
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("");
+                    if !path.is_empty() { open_file_inner(path); }
+                });
+            }
             std::thread::spawn(|| {
                 std::thread::sleep(std::time::Duration::from_secs(8));
                 if !get_settings().engine_auto_update {
@@ -1429,6 +1517,7 @@ fn main() {
             notify,
             reorder_downloads,
             search_videos,
+            resolve_output,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Infallora");

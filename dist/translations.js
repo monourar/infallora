@@ -180,7 +180,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Conserve toutes les langues audio au lieu de la seule par défaut.",
     "search.results": "Résultats de recherche",
     "form.mediaPlaceholder": "Collez un lien, ou plusieurs — un par ligne (Ctrl+Entrée pour télécharger)",
-    "form.linksCount": "{n} liens"
+    "form.linksCount": "{n} liens",
+    "exists.title": "Le fichier existe déjà",
+    "exists.overwrite": "Remplacer",
+    "exists.copy": "Télécharger une copie"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -363,7 +366,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Conserva todos los idiomas de audio en lugar de solo el predeterminado.",
     "search.results": "Resultados de búsqueda",
     "form.mediaPlaceholder": "Pega un enlace o varios — uno por línea (Ctrl+Enter para descargar)",
-    "form.linksCount": "{n} enlaces"
+    "form.linksCount": "{n} enlaces",
+    "exists.title": "El archivo ya existe",
+    "exists.overwrite": "Sobrescribir",
+    "exists.copy": "Descargar una copia"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -546,7 +552,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Behält alle Audiosprachen statt nur der Standardspur.",
     "search.results": "Suchergebnisse",
     "form.mediaPlaceholder": "Einen Link einfügen oder mehrere – einer pro Zeile (Strg+Enter zum Download)",
-    "form.linksCount": "{n} Links"
+    "form.linksCount": "{n} Links",
+    "exists.title": "Datei existiert bereits",
+    "exists.overwrite": "Überschreiben",
+    "exists.copy": "Kopie herunterladen"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -729,7 +738,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Yalnızca varsayılan yerine tüm ses dillerini korur.",
     "search.results": "Arama sonuçları",
     "form.mediaPlaceholder": "Bir bağlantı veya birkaçını yapıştırın — her biri ayrı satırda (İndirmek için Ctrl+Enter)",
-    "form.linksCount": "{n} bağlantı"
+    "form.linksCount": "{n} bağlantı",
+    "exists.title": "Dosya zaten var",
+    "exists.overwrite": "Üzerine yaz",
+    "exists.copy": "Bir kopyasını indir"
   },
   "pt": {
     "app.subtitle": "Downloader de vídeos e áudio",
@@ -912,7 +924,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Mantém todos os idiomas de áudio em vez de apenas o padrão.",
     "search.results": "Resultados da busca",
     "form.mediaPlaceholder": "Cole um link, ou vários — um por linha (Ctrl+Enter para baixar)",
-    "form.linksCount": "{n} links"
+    "form.linksCount": "{n} links",
+    "exists.title": "O arquivo já existe",
+    "exists.overwrite": "Substituir",
+    "exists.copy": "Baixar uma cópia"
   },
   "ru": {
     "app.subtitle": "Загрузчик видео и аудио",
@@ -1095,7 +1110,10 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "Сохраняет все языковые дорожки, а не только основную.",
     "search.results": "Результаты поиска",
     "form.mediaPlaceholder": "Вставьте одну ссылку или несколько — каждую на новой строке (Ctrl+Enter для загрузки)",
-    "form.linksCount": "{n} ссылок"
+    "form.linksCount": "{n} ссылок",
+    "exists.title": "Файл уже существует",
+    "exists.overwrite": "Перезаписать",
+    "exists.copy": "Скачать копию"
   },
   "zh": {
     "app.subtitle": "视频和音频下载器",
@@ -1278,6 +1296,9 @@ window.INFALLORA_TRANSLATIONS = {
     "set.multiAudioHelp": "保留所有语言音轨，而不只是默认音轨。",
     "search.results": "搜索结果",
     "form.mediaPlaceholder": "粘贴一个链接，或多个——每行一个（Ctrl+Enter 下载）",
-    "form.linksCount": "{n} 个链接"
+    "form.linksCount": "{n} 个链接",
+    "exists.title": "文件已存在",
+    "exists.overwrite": "覆盖",
+    "exists.copy": "下载副本"
   }
 };
