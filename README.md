@@ -10,12 +10,15 @@
 </p>
 
 <p align="center">
-  <img src="docs/icons/windows.svg" alt="Windows" width="22"> 
-  <img src="docs/icons/rust.svg" alt="Rust" width="22"> 
-  <img src="docs/icons/tauri.svg" alt="Tauri" width="22"> 
-  <img src="docs/icons/ffmpeg.svg" alt="ffmpeg" width="22"> 
-  <img src="docs/icons/youtube.svg" alt="YouTube" width="22"> 
-  <img src="docs/icons/github.svg" alt="GitHub" width="22">
+  <img src="docs/icons/windows.svg" alt="Windows" width="24">
+  <span style="display:inline-block;background:#F5F5F5;border-radius:6px;padding:2px"><img src="docs/icons/rust.svg" alt="Rust" width="20"></span>
+  <img src="docs/icons/tauri.svg" alt="Tauri" width="24">
+  <img src="docs/icons/ffmpeg.svg" alt="ffmpeg" width="24">
+  <img src="docs/icons/youtube.svg" alt="YouTube" width="24">
+  <span style="display:inline-block;background:#F5F5F5;border-radius:6px;padding:2px"><img src="docs/icons/github.svg" alt="GitHub" width="20"></span>
+  <img src="docs/icons/discord.svg" alt="Discord" width="24">
+  <img src="docs/icons/telegram.svg" alt="Telegram" width="24">
+  <span style="display:inline-block;background:#F5F5F5;border-radius:6px;padding:2px"><img src="docs/icons/x.svg" alt="X" width="20"></span>
 </p>
 
 <p align="center">
@@ -207,19 +210,19 @@ RELEASING.md     signed release process
 NOTICE.md        third-party license notice
 ```
 
-Built with <img src="docs/icons/rust.svg" alt="Rust" width="16"> **Rust** and <img src="docs/icons/tauri.svg" alt="Tauri" width="16"> **Tauri**. The UI polls the backend for progress, keeping the implementation small. Cancelling stops yt-dlp and its child processes; transient 403 failures retry automatically.
+Built with <span style="display:inline-block;background:#F5F5F5;border-radius:4px;padding:1px"><img src="docs/icons/rust.svg" alt="Rust" width="14"></span> **Rust** and <img src="docs/icons/tauri.svg" alt="Tauri" width="16"> **Tauri**. The UI polls the backend for progress, keeping the implementation small. Cancelling stops yt-dlp and its child processes; transient 403 failures retry automatically.
 
 ---
 
 ## FAQ
 
-**Why does Windows warn about the installer?**
+<img src="docs/icons/windows.svg" alt="" width="16"> **Why does Windows warn about the installer?**
 Infallora is not code-signed, so SmartScreen warns for any unsigned app. Verify you downloaded from this repository's Releases page, then click **More info → Run anyway**. The *update manifest* is signed, so future updates verify automatically.
 
 **Where did the window go?**
 Closing the window hides Infallora to the system tray — downloads keep running. Click the tray icon or choose **Show** from its menu to restore. Choose **Quit** to exit.
 
-**Why does a video fail with 403?**
+<img src="docs/icons/youtube.svg" alt="" width="16"> **Why does a video fail with 403?**
 YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, the video is usually account-restricted — add a cookies file.
 
 **Do I need to update yt-dlp myself?**
@@ -247,7 +250,12 @@ Infallora's source is [MIT licensed](LICENSE). Release bundles include third-par
 
 ## Links
 
-- [Download](https://github.com/monourar/infallora/releases/latest)
-- [Report an issue](https://github.com/monourar/infallora/issues)
-- [Release process](RELEASING.md)
-- [Licensing notice](NOTICE.md)
+| | |
+|:---:|---|
+| <img src="docs/icons/github.svg" alt="" width="18"> | [Download](https://github.com/monourar/infallora/releases/latest) · [Report an issue](https://github.com/monourar/infallora/issues) · [Release process](RELEASING.md) · [Licensing notice](NOTICE.md) |
+| <img src="docs/icons/discord.svg" alt="" width="18"> | Discord community — *coming soon* |
+| <img src="docs/icons/telegram.svg" alt="" width="18"> | Telegram channel — *coming soon* |
+
+<p align="center">
+  <sub>Made with <span style="display:inline-block;background:#F5F5F5;border-radius:3px;padding:1px"><img src="docs/icons/rust.svg" alt="Rust" width="11"></span> Rust and <img src="docs/icons/tauri.svg" alt="Tauri" width="12"> Tauri · Icons by <a href="https://thesvg.org">theSVG</a></sub>
+</p>
