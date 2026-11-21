@@ -802,10 +802,48 @@ fn clear_finished(state: State<'_, DownloadState>) {
 
 #[tauri::command]
 fn open_path(path: String) {
+    open_file_inner(&path);
+}
+
+#[cfg(windows)]
+fn open_file_inner(path: &str) {
+    use windows_sys::Win32::UI::Shell::ShellExecuteW;
+    let wide: Vec<u16> = path.encode_utf16().chain(std::iter::once(0)).collect();
+    let verb: Vec<u16> = "open\0".encode_utf16().collect();
+    let result = unsafe {
+        ShellExecuteW(
+            std::ptr::null_mut(),
+            verb.as_ptr(),
+            wide.as_ptr(),
+            std::ptr::null(),
+            std::ptr::null(),
+            5,
+        )
+    };
+    if result as i32 <= 32 {
+        let _ = hidden_command("explorer").arg(format!("/select,{}", path)).spawn();
+    }
+}
+
+#[cfg(not(windows))]
+fn open_file_inner(path: &str) {
+    let _ = hidden_command("xdg-open").arg(path).spawn();
+}
+
+#[tauri::command]
+fn open_file(path: String) {
+    open_file_inner(&path);
+}
+
+#[tauri::command]
+fn open_folder(path: String) {
     #[cfg(windows)]
-    let _ = hidden_command("explorer").arg(&path).spawn();
+    let _ = hidden_command("explorer").arg(format!("/select,{}", path)).spawn();
     #[cfg(not(windows))]
-    let _ = hidden_command("xdg-open").arg(&path).spawn();
+    {
+        let parent = PathBuf::from(&path).parent().map(|p| p.to_path_buf()).unwrap_or_default();
+        let _ = hidden_command("xdg-open").arg(parent).spawn();
+    }
 }
 
 fn settings_path() -> PathBuf {
@@ -1177,6 +1215,8 @@ fn main() {
             cancel_all,
             clear_finished,
             open_path,
+            open_file,
+            open_folder,
             preview_link,
             list_formats,
             get_settings,

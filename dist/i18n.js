@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.2.7';
+  const VERSION = window.INFALLORA_VERSION || '0.2.8';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -69,6 +69,7 @@
     'action.openFile': { en: 'Open file', ar: 'فتح الملف' },
     'action.cancel': { en: 'Cancel', ar: 'إلغاء' },
     'action.open': { en: 'Open', ar: 'فتح' },
+    'action.openFolder': { en: 'Open folder', ar: 'فتح المجلد' },
     'footer': { en: 'Powered by yt-dlp · Local only · Built with Rust and Tauri', ar: 'مدعوم بواسطة yt-dlp · محلي بالكامل · مبني بـ Rust و Tauri' },
 
     // hints / toasts

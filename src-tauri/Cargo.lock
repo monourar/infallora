@@ -1985,7 +1985,7 @@ dependencies = [
 
 [[package]]
 name = "infallora"
-version = "0.2.7"
+version = "0.2.8"
 dependencies = [
  "reqwest",
  "rfd",
@@ -1994,6 +1994,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-updater",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

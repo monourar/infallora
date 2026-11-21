@@ -167,7 +167,8 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineUpdated": "yt-dlp mis à jour vers {v}.",
     "set.engineCurrentAlready": "Déjà à jour.",
     "set.engineFailed": "Échec de la mise à jour : {e}",
-    "set.engineBusy": "Terminez d'abord les téléchargements actifs."
+    "set.engineBusy": "Terminez d'abord les téléchargements actifs.",
+    "action.openFolder": "Ouvrir le dossier"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -337,7 +338,8 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineUpdated": "yt-dlp actualizado a {v}.",
     "set.engineCurrentAlready": "Ya está actualizado.",
     "set.engineFailed": "Error al actualizar: {e}",
-    "set.engineBusy": "Termina primero las descargas activas."
+    "set.engineBusy": "Termina primero las descargas activas.",
+    "action.openFolder": "Abrir carpeta"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -507,7 +509,8 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineUpdated": "yt-dlp auf {v} aktualisiert.",
     "set.engineCurrentAlready": "Bereits aktuell.",
     "set.engineFailed": "Update fehlgeschlagen: {e}",
-    "set.engineBusy": "Zuerst aktive Downloads beenden."
+    "set.engineBusy": "Zuerst aktive Downloads beenden.",
+    "action.openFolder": "Ordner öffnen"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -677,6 +680,7 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineUpdated": "yt-dlp {v} sürümüne güncellendi.",
     "set.engineCurrentAlready": "Zaten güncel.",
     "set.engineFailed": "Güncelleme başarısız: {e}",
-    "set.engineBusy": "Önce aktif indirmeleri bitirin."
+    "set.engineBusy": "Önce aktif indirmeleri bitirin.",
+    "action.openFolder": "Klasörü aç"
   }
 };

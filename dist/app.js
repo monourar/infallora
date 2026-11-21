@@ -302,6 +302,7 @@ function updateItem(el, item) {
     actions.innerHTML = '';
     if (item.path && (status === 'done' || status === 'error')) {
       actions.appendChild(makeButton('open', item.id, t('action.openFile')));
+      actions.appendChild(makeButton('folder', item.id, t('action.openFolder')));
     }
     if (status === 'downloading' || status === 'queued') {
       actions.appendChild(makeButton('cancel', item.id, t('action.cancel')));
@@ -565,9 +566,12 @@ $('list').addEventListener('click', async (e) => {
   const id = Number(button.dataset.id);
   try {
     if (button.dataset.action === 'cancel') await invoke('cancel_download', { id });
-    if (button.dataset.action === 'open') {
+    if (button.dataset.action === 'open' || button.dataset.action === 'folder') {
       const item = lastItems.find((i) => i.id === id);
-      if (item) await invoke('open_path', { path: item.path });
+      if (item) {
+        const cmd = button.dataset.action === 'folder' ? 'open_folder' : 'open_file';
+        await invoke(cmd, { path: item.path });
+      }
     }
     poll();
   } catch (err) {
