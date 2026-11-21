@@ -56,6 +56,10 @@ Arabic interface with automatic RTL layout:
 - **Six languages** — English, العربية, Français, Español, Deutsch and Türkçe, with automatic RTL mirroring for Arabic
 - **Private videos** — automatic `cookies.txt` detection, no settings needed for public content
 - **Self-updating app and engines** — signed app updates via GitHub Releases, plus automatic yt-dlp updates on startup (or on demand in **Settings → updates → engines**)
+- **Persistent history** — your download list survives restarts
+- **System tray** — closing the window hides to tray; downloads keep running
+- **Notifications** — native Windows toast when a download finishes or fails
+- **Browser links** — `infallora://<url>` opens a link directly in the app
 - **Local only** — no account, no telemetry, no upload, no cloud
 
 ---

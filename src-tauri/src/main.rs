@@ -6,7 +6,7 @@ use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::{Arc, Condvar, Mutex};
-use tauri::{AppHandle, Manager, State};
+use tauri::{AppHandle, Emitter, Listener, Manager, State};
 
 /// Build a command that never opens a visible console window on Windows.
 fn hidden_command(program: &str) -> Command {
@@ -122,7 +122,6 @@ struct Gate {
     limit: usize,
 }
 
-#[derive(Default)]
 pub struct DownloadState {
     items: Arc<Mutex<Vec<DownloadItem>>>,
     next_id: Arc<Mutex<u64>>,
@@ -130,10 +129,68 @@ pub struct DownloadState {
     gate: Arc<(Mutex<Gate>, Condvar)>,
 }
 
+fn history_path() -> PathBuf {
+    if let Ok(appdata) = std::env::var("APPDATA") {
+        PathBuf::from(appdata).join("Infallora").join("downloads.json")
+    } else {
+        PathBuf::from("downloads.json")
+    }
+}
+
+fn load_history() -> Vec<DownloadItem> {
+    let text = match std::fs::read_to_string(history_path()) {
+        Ok(t) => t,
+        Err(_) => return Vec::new(),
+    };
+    let mut items: Vec<DownloadItem> = match serde_json::from_str(&text) {
+        Ok(v) => v,
+        Err(_) => return Vec::new(),
+    };
+    for item in &mut items {
+        if item.status == "downloading" || item.status == "queued" {
+            item.status = "error".into();
+            item.message = "Interrupted by restart".into();
+            item.speed.clear();
+            item.eta.clear();
+        }
+    }
+    items
+}
+
+fn save_history(items: &[DownloadItem]) {
+    if let Ok(text) = serde_json::to_string_pretty(items) {
+        if let Some(dir) = history_path().parent() {
+            let _ = std::fs::create_dir_all(dir);
+        }
+        let _ = std::fs::write(history_path(), text);
+    }
+}
+
+impl Default for DownloadState {
+    fn default() -> Self {
+        let items = load_history();
+        let next = items.iter().map(|i| i.id).max().unwrap_or(0) + 1;
+        Self {
+            items: Arc::new(Mutex::new(items)),
+            next_id: Arc::new(Mutex::new(next)),
+            processes: Arc::new(Mutex::new(HashMap::new())),
+            gate: Arc::new((Mutex::new(Gate::default()), Condvar::new())),
+        }
+    }
+}
+
 fn update_item<F: FnOnce(&mut DownloadItem)>(items: &Arc<Mutex<Vec<DownloadItem>>>, id: u64, f: F) {
+    let mut changed = false;
     if let Ok(mut list) = items.lock() {
         if let Some(item) = list.iter_mut().find(|i| i.id == id) {
+            let before = item.status.clone();
             f(item);
+            changed = item.status != before;
+        }
+    }
+    if changed {
+        if let Ok(list) = items.lock() {
+            save_history(&list);
         }
     }
 }
@@ -709,6 +766,7 @@ fn start_download(
     };
     if let Ok(mut list) = state.items.lock() {
         list.push(item);
+        save_history(&list);
     }
 
     {
@@ -797,6 +855,7 @@ fn cancel_all(state: State<'_, DownloadState>) {
 fn clear_finished(state: State<'_, DownloadState>) {
     if let Ok(mut list) = state.items.lock() {
         list.retain(|i| i.status == "queued" || i.status == "downloading");
+        save_history(&list);
     }
 }
 
@@ -1185,11 +1244,35 @@ async fn list_playlist(url: String) -> Result<Vec<PlaylistEntry>, String> {
         .unwrap_or_else(|e| Err(e.to_string()))
 }
 
+#[tauri::command]
+async fn notify(app: AppHandle, title: String, body: String) -> Result<(), String> {
+    use tauri_plugin_notification::NotificationExt;
+    app.notification()
+        .builder()
+        .title(title)
+        .body(body)
+        .show()
+        .map_err(|e| e.to_string())
+}
+
+fn tray_label(key: &str) -> &'static str {
+    match get_settings().language.as_str() {
+        "ar" => match key { "show" => "إظهار", "quit" => "خروج", _ => "إنفالورا" },
+        "fr" => match key { "show" => "Afficher", "quit" => "Quitter", _ => "Infallora" },
+        "es" => match key { "show" => "Mostrar", "quit" => "Salir", _ => "Infallora" },
+        "de" => match key { "show" => "Anzeigen", "quit" => "Beenden", _ => "Infallora" },
+        "tr" => match key { "show" => "Göster", "quit" => "Çık", _ => "Infallora" },
+        _ => match key { "show" => "Show", "quit" => "Quit", _ => "Infallora" },
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_deep_link::init())
         .manage(DownloadState::default())
-        .setup(|_app| {
+        .setup(|app| {
             std::thread::spawn(|| {
                 std::thread::sleep(std::time::Duration::from_secs(8));
                 if !get_settings().engine_auto_update {
@@ -1205,6 +1288,60 @@ fn main() {
                 }
                 let _ = download_ytdlp();
             });
+
+            // Deep links: infallora://<url>
+            let handle = app.handle().clone();
+            app.listen("deep-link://new-url", move |event| {
+                let raw = event.payload();
+                let url = serde_json::from_str::<String>(raw).unwrap_or_else(|_| raw.to_string());
+                let _ = handle.emit("infallora:open-url", url);
+            });
+
+            // System tray
+            use tauri::menu::{Menu, MenuItem};
+            let show = MenuItem::with_id(app, "show", tray_label("show"), true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", tray_label("quit"), true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&show, &quit])?;
+            let icon = tauri::image::Image::from_bytes(include_bytes!("../icons/icon.ico"))?;
+            tauri::tray::TrayIconBuilder::new()
+                .icon(icon)
+                .tooltip(tray_label("app"))
+                .menu(&menu)
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "show" => {
+                        if let Some(w) = app.get_webview_window("main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                    }
+                    "quit" => app.exit(0),
+                    _ => {}
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let tauri::tray::TrayIconEvent::Click {
+                        button: tauri::tray::MouseButton::Left,
+                        ..
+                    } = event
+                    {
+                        if let Some(w) = tray.app_handle().get_webview_window("main") {
+                            let _ = w.show();
+                            let _ = w.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+
+            // Close hides to tray
+            if let Some(window) = app.get_webview_window("main") {
+                let w = window.clone();
+                window.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        let _ = w.hide();
+                    }
+                });
+            }
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -1228,6 +1365,7 @@ fn main() {
             list_playlist,
             engine_versions,
             update_engine,
+            notify,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Infallora");

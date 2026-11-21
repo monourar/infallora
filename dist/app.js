@@ -380,6 +380,12 @@ function render(items) {
     const previous = lastStatus.get(item.id);
     if (previous !== item.status && (item.status === 'done' || item.status === 'error')) {
       showIslandAlert();
+      invoke('notify', {
+        title: 'Infallora',
+        body: item.status === 'done'
+          ? t('toast.finished', { title: item.title })
+          : t('toast.failed', { title: item.title }),
+      }).catch(() => {});
       const needsSignIn = item.status === 'error' && /Video unavailable/i.test(item.message || '');
       toast(
         needsSignIn ? t('toast.signIn') : (item.status === 'done' ? t('toast.finished', { title: item.title }) : t('toast.failed', { title: item.title })),
@@ -991,3 +997,14 @@ window.addEventListener('infallora:languagechange', () => {
   renderFormats();
   poll();
 });
+
+if (internals && internals.listen) {
+  internals.listen('infallora:open-url', (event) => {
+    const url = String(event.payload || '').trim();
+    if (!url) return;
+    $('urlInput').value = url;
+    setHint(t('hint.pasted'));
+    schedulePreview();
+    window.focus();
+  });
+}
