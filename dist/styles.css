@@ -532,7 +532,7 @@ html.theme-switching *, html.theme-switching *::before, html.theme-switching *::
 }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-input[type="text"], input[type="url"], select {
+input[type="text"], input[type="url"], textarea, select {
   width: 100%;
   height: 46px;
   background: var(--glass-field);
@@ -541,17 +541,18 @@ input[type="text"], input[type="url"], select {
   font-size: 13px;
   padding: 0 13px;
   outline: none;
+  border: none;
   border-radius: var(--radius-sm);
   transition: box-shadow var(--motion), background var(--motion), transform var(--motion);
 }
 select { padding-right: 8px; }
-input::placeholder { color: var(--ink-muted); opacity: .85; }
-input:hover, select:hover { background: var(--glass-strong); }
-input:focus, select:focus {
+input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: .85; }
+input:hover, textarea:hover, select:hover { background: var(--glass-strong); }
+input:focus, textarea:focus, select:focus {
   background: var(--glass-strong);
   box-shadow: 0 0 0 2px var(--accent), var(--glass-shadow);
 }
-input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-shadow); }
+input[aria-invalid="true"], textarea[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-shadow); }
 
 .select-wrap { position: relative; }
 .select-trigger {
@@ -683,6 +684,8 @@ body.drag-active::after {
   pointer-events: none;
 }
 #urlInput {
+  display: block;
+  width: 100%;
   resize: none;
   min-height: 62px;
   max-height: 150px;
