@@ -6,7 +6,7 @@
 
 <p align="center">
   A fast, private media downloader for Windows. Liquid-glass UI, playlist support,
-  full format control, and Arabic/RTL out of the box.
+  full format control, six languages, and self-updating engines.
 </p>
 
 <p align="center">
@@ -19,17 +19,33 @@
 
 ---
 
+## Contents
+
+- [Download](#download)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Quick start](#quick-start)
+- [Where things are stored](#where-things-are-stored)
+- [Privacy](#privacy)
+- [Build from source](#build-from-source)
+- [Project layout](#project-layout)
+- [FAQ](#faq)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Download
 
-Get the latest signed installer from **[Releases](https://github.com/monourar/infallora/releases/latest)**.
+Get the latest installer from **[Releases](https://github.com/monourar/infallora/releases/latest)**.
 
 1. Download `Infallora_x.x.x_x64-setup.exe`.
-2. Run it. If Windows SmartScreen appears, click **More info → Run anyway** (the installer is not code-signed yet).
+2. Run it. If Windows SmartScreen appears, click **More info → Run anyway** — the installer is unsigned (see [FAQ](#faq)).
 3. Open Infallora and paste a link.
 
-Infallora updates itself. You can check manually in **Settings → updates**, or leave *check on startup* enabled.
+Updates are checked on startup, or manually in **Settings → updates**. The app and its yt-dlp engine both update themselves.
 
-> **Requires Windows 10/11 with WebView2** (already installed on most Windows systems; [install it here](https://developer.microsoft.com/microsoft-edge/webview2/) if needed).
+> Requires **Windows 10/11** with [WebView2](https://developer.microsoft.com/microsoft-edge/webview2/) (preinstalled on most systems).
 
 ---
 
@@ -47,20 +63,29 @@ Arabic interface with automatic RTL layout:
 
 ## Features
 
-- **Download from thousands of sites** — anything [yt-dlp](https://github.com/yt-dlp/yt-dlp) supports
-- **Quality up to 8K** — 8K/4K/1440p/1080p/720p and lower, plus *smallest file*
-- **Full format control** — container (MP4/WebM/MKV), codec (H.264/AV1/VP9), bitrate, and audio format
-- **Playlists** — browse every entry, preview thumbnails, select all/none, and download one row per video
-- **Subtitles and metadata** — language chips for 10 languages, embedded metadata, thumbnail sidecar files
-- **Liquid-glass interface** — light/dark themes, reduced-motion mode, and in-window settings
-- **Six languages** — English, العربية, Français, Español, Deutsch and Türkçe, with automatic RTL mirroring for Arabic
-- **Private videos** — automatic `cookies.txt` detection, no settings needed for public content
-- **Self-updating app and engines** — signed app updates via GitHub Releases, plus automatic yt-dlp updates on startup (or on demand in **Settings → updates → engines**)
-- **Persistent history** — your download list survives restarts
-- **System tray** — closing the window hides to tray; downloads keep running
-- **Notifications** — native Windows toast when a download finishes or fails
-- **Browser links** — `infallora://<url>` opens a link directly in the app
-- **Local only** — no account, no telemetry, no upload, no cloud
+**Downloading**
+- Thousands of sites via [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+- Quality up to 8K/4K, down to *smallest file*
+- Container (MP4/WebM/MKV), codec (H.264/AV1/VP9), bitrate and audio format control
+- Playlist browsing with thumbnails, select all/none, one row per video
+- Subtitles (10 language shortcuts + any ISO code), embedded metadata, thumbnail sidecars
+- Automatic retry on transient HTTP 403 errors
+
+**Experience**
+- Liquid-glass interface with light/dark themes and reduced motion
+- Dynamic Island-style download activity with long-press expand and queue peek
+- Six languages — English, العربية, Français, Español, Deutsch, Türkçe — with RTL mirroring for Arabic
+- System tray: closing the window hides to tray while downloads continue
+- Native Windows notifications on completion or failure
+- Persistent download history across restarts
+- Separate **Open file** and **Open folder** actions on each download
+
+**Maintenance**
+- Signed self-updates via GitHub Releases
+- Automatic yt-dlp updates on startup, plus an on-demand button
+- `infallora://<url>` deep links for browser integration
+- Automatic `cookies.txt` detection for private content
+- No account, telemetry, upload or cloud — everything runs locally
 
 ---
 
@@ -68,39 +93,60 @@ Arabic interface with automatic RTL layout:
 
 1. Paste a video or playlist URL into **Media link**.
 2. Pick a preset: **Auto**, **MP3 320**, **1080p MP4**, or **Playlist**.
-3. Choose a download folder and click **Download**.
+3. Choose a folder and click **Download**.
 
-Use **Browse formats** for per-format details (resolution, codec, bitrate, size) before downloading.
+Use **Browse formats** for per-format details before downloading.
 
 ### Playlists
 
-Paste a playlist link and Infallora lists every video with its thumbnail and duration. Use **all** / **none** or tick individual entries, then press **Download** — only the selected videos are queued.
+Paste a playlist link and Infallora lists every entry with thumbnail and duration. Use **all** / **none** or tick individual videos, then press **Download** — only selected videos are queued.
 
 ### Private or members-only videos
 
 Public videos need no setup. For restricted content:
 
 1. Install the **Get cookies.txt LOCALLY** browser extension.
-2. While signed in to the site, export cookies as `cookies.txt`.
-3. Place the file **next to `Infallora.exe`** — it is picked up automatically — or select it in **Settings → advanced → cookies file**.
+2. While signed in, export cookies as `cookies.txt`.
+3. Place the file **next to `Infallora.exe`** (auto-detected), or select it in **Settings → advanced → cookies file**.
 
-Infallora cannot bypass authentication. Your sign-in is required to access your own private content.
+Infallora cannot bypass authentication — it only accesses content your browser session can already reach.
+
+### Browser links
+
+The installer registers the `infallora://` scheme. A link like this opens the app and fills the URL field automatically:
+
+```
+infallora://https://www.youtube.com/watch?v=dQw4w9WgXcQ
+```
 
 ### Language
 
-**Settings → appearance → language** offers *system*, *English*, *العربية*, *Français*, *Español*, *Deutsch* and *Türkçe*. The interface mirrors automatically in Arabic. With *system*, Infallora follows your Windows language.
+**Settings → appearance → language** offers *system* plus all six languages. The layout mirrors automatically in Arabic; *system* follows your Windows language.
+
+---
+
+## Where things are stored
+
+| Item | Location |
+|---|---|
+| Preferences | `%APPDATA%\Infallora\settings.json` |
+| Download history | `%APPDATA%\Infallora\downloads.json` |
+| Cookies (auto-detected) | Next to `Infallora.exe`, or in your Downloads folder |
+| Bundled engines | Install folder, under `_up_` (yt-dlp, ffmpeg, ffprobe) |
+
+Deleting the two JSON files resets preferences and history. Downloaded media stays wherever you saved it.
 
 ---
 
 ## Privacy
 
-Everything runs on your PC. Infallora downloads using the bundled yt-dlp and ffmpeg binaries, writes files only to your chosen folder, and stores preferences in `%APPDATA%\Infallora\settings.json`. There is no account, analytics, or upload path.
+Everything runs on your PC. Infallora drives the bundled yt-dlp and ffmpeg binaries, writes files only to your chosen folder, and stores preferences locally. There is no account, analytics, or upload path.
 
 ---
 
 ## Build from source
 
-Requirements: Windows 10/11, [Rust](https://rustup.rs/), Node.js 20+, and WebView2.
+Requirements: Windows 10/11, [Rust](https://rustup.rs/), Node.js 20+, WebView2.
 
 ```powershell
 git clone https://github.com/monourar/infallora.git
@@ -116,15 +162,15 @@ curl.exe -L -o ffmpeg.zip https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-esse
 # extract ffmpeg.exe and ffprobe.exe from the zip into this folder
 ```
 
-Then build:
+Build the signed installer:
 
 ```powershell
 npx tauri build
 ```
 
-The signed installer is written to `src-tauri/target/release/bundle/nsis/`. Signing requires the `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` secrets — see [RELEASING.md](RELEASING.md). Without them the app builds, but no update signature is produced.
+Output: `src-tauri/target/release/bundle/nsis/`. Signing needs `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` (see [RELEASING.md](RELEASING.md)); without them the app builds but no update signature is produced.
 
-For a quick debug build without bundling:
+Quick debug build without bundling:
 
 ```powershell
 cd src-tauri
@@ -132,7 +178,7 @@ cargo build
 .\target\debug\infallora.exe
 ```
 
-> On machines without the MSVC linker, the GNU toolchain works:
+> No MSVC linker? Use the GNU toolchain:
 > `cargo +stable-x86_64-pc-windows-gnu build --release`.
 
 ---
@@ -140,38 +186,51 @@ cargo build
 ## Project layout
 
 ```
-dist/            HTML, CSS and JS interface (including i18n.js)
+dist/            HTML, CSS and JS interface (i18n, updater, engine UI)
 src-tauri/       Rust backend and Tauri configuration
-  src/main.rs    download engine, settings, playlists, cookies
-  icons/         app icon
+  src/main.rs    downloads, settings, playlists, cookies, tray, deep links
+  icons/         squircle app icon
   capabilities/  plugin permissions
 docs/            README screenshots
-.github/workflows/ signed release workflow
+RELEASING.md     signed release process
+NOTICE.md        third-party license notice
 ```
 
-The UI polls the Rust backend for progress, which keeps the implementation small and dependency-light. Cancelling stops yt-dlp and its child processes. Transient HTTP 403 failures are retried automatically.
+The UI polls the Rust backend for progress, keeping the implementation small. Cancelling stops yt-dlp and its child processes; transient 403 failures retry automatically.
 
 ---
 
 ## FAQ
 
 **Why does Windows warn about the installer?**
-Infallora is not code-signed. Windows shows a SmartScreen warning for any unsigned app, even safe ones. Verify you downloaded from this repository's Releases page, then click **More info → Run anyway**. The installer is built on GitHub Actions and published with a signed update manifest.
+Infallora is not code-signed, so SmartScreen warns for any unsigned app. Verify you downloaded from this repository's Releases page, then click **More info → Run anyway**. The *update manifest* is signed, so future updates verify automatically.
+
+**Where did the window go?**
+Closing the window hides Infallora to the system tray — downloads keep running. Click the tray icon or choose **Show** from its menu to restore. Choose **Quit** to exit.
 
 **Why does a video fail with 403?**
-YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, it is usually account-restricted — use a cookies file.
+YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, the video is usually account-restricted — add a cookies file.
 
-**Does it work without internet?**
-No. Downloading and update checks need a network connection, but your settings and files stay local.
+**Do I need to update yt-dlp myself?**
+No. It updates automatically on startup. You can also run **Settings → updates → engines → update yt-dlp** at any time. Change *update engines on startup* to *off* to disable this.
+
+**Does it work offline?**
+No. Downloads and update checks need a connection, but settings and files stay local.
 
 **Can it bypass paywalls or region locks?**
 No. It only accesses content your browser session can already access.
 
 ---
 
+## Contributing
+
+Issues and pull requests are welcome. For a new translation, add a language table to `dist/translations.js` and an option to the language selector in `dist/index.html` + `dist/settings.js`. Run `node --check` on changed JS before opening a PR.
+
+---
+
 ## License
 
-Infallora's source is [MIT licensed](LICENSE). The release bundles third-party engines with their own licenses — see [NOTICE.md](NOTICE.md) and the bundled `LICENSE-GPLv3.txt`. Respect the terms of service of the sites you use and the rights of content creators.
+Infallora's source is [MIT licensed](LICENSE). Release bundles include third-party engines with their own licenses — see [NOTICE.md](NOTICE.md) and the bundled `LICENSE-GPLv3.txt`. Respect the terms of service of sites you use and the rights of creators.
 
 ---
 
