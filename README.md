@@ -10,6 +10,15 @@
 </p>
 
 <p align="center">
+  <img src="docs/icons/windows.svg" alt="Windows" width="22"> 
+  <img src="docs/icons/rust.svg" alt="Rust" width="22"> 
+  <img src="docs/icons/tauri.svg" alt="Tauri" width="22"> 
+  <img src="docs/icons/ffmpeg.svg" alt="ffmpeg" width="22"> 
+  <img src="docs/icons/youtube.svg" alt="YouTube" width="22"> 
+  <img src="docs/icons/github.svg" alt="GitHub" width="22">
+</p>
+
+<p align="center">
   <a href="https://github.com/monourar/infallora/releases/latest"><img src="https://img.shields.io/github/v/release/monourar/infallora?style=flat-square&color=7C3AED" alt="Latest release"></a>
   <a href="https://github.com/monourar/infallora/releases"><img src="https://img.shields.io/github/downloads/monourar/infallora/total?style=flat-square&color=7C3AED" alt="Downloads"></a>
   <img src="https://img.shields.io/badge/platform-Windows-0078D6?style=flat-square" alt="Windows">
@@ -64,9 +73,11 @@ Arabic interface with automatic RTL layout:
 ## Features
 
 **Downloading**
-- Thousands of sites via [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- Quality up to 8K/4K, down to *smallest file*
-- Container (MP4/WebM/MKV), codec (H.264/AV1/VP9), bitrate and audio format control
+
+<img src="docs/icons/youtube.svg" alt="" width="16"> Thousands of sites via [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+<img src="docs/icons/ffmpeg.svg" alt="" width="16"> Quality up to 8K/4K, down to *smallest file*
+
+<img src="docs/icons/ffmpeg.svg" alt="" width="16"> Container (MP4/WebM/MKV), codec (H.264/AV1/VP9), bitrate and audio format control
 - Playlist browsing with thumbnails, select all/none, one row per video
 - Subtitles (10 language shortcuts + any ISO code), embedded metadata, thumbnail sidecars
 - Automatic retry on transient HTTP 403 errors
@@ -196,7 +207,7 @@ RELEASING.md     signed release process
 NOTICE.md        third-party license notice
 ```
 
-The UI polls the Rust backend for progress, keeping the implementation small. Cancelling stops yt-dlp and its child processes; transient 403 failures retry automatically.
+Built with <img src="docs/icons/rust.svg" alt="Rust" width="16"> **Rust** and <img src="docs/icons/tauri.svg" alt="Tauri" width="16"> **Tauri**. The UI polls the backend for progress, keeping the implementation small. Cancelling stops yt-dlp and its child processes; transient 403 failures retry automatically.
 
 ---
 
