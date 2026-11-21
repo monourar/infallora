@@ -112,7 +112,7 @@ function fill(settings) {
   setSeg('saving', state.saving_method);
   setSeg('autoUpdate', state.auto_update ? 'on' : 'off');
   setSeg('engineUpdate', state.engine_auto_update ? 'on' : 'off');
-  if ($('languageSelect')) $('languageSelect').value = state.language || 'system';
+  renderLanguage();
   setToggle('reduceMotion', state.reduce_motion);
   setToggle('h265', state.allow_h265);
   setToggle('metadata', state.metadata);
@@ -164,6 +164,7 @@ document.querySelectorAll('.set-nav-item').forEach((item) => {
 window.addEventListener('infallora:languagechange', () => {
   const active = document.querySelector('.set-nav-item.active');
   if (active) $('setHeading').textContent = window.I18n.t(`nav.${active.dataset.section}`);
+  renderLanguage();
 });
 
 document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
@@ -190,9 +191,78 @@ document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
   });
 });
 
-$('languageSelect').addEventListener('change', (e) => {
-  state.language = e.target.value;
-  window.I18n.setLanguage(e.target.value);
+const LANGUAGE_VALUES = ['system', 'en', 'ar', 'fr', 'es', 'de', 'tr'];
+
+function languageLabel(value) {
+  if (value === 'system') return window.I18n.t('set.system');
+  if (value === 'en') return window.I18n.t('set.english');
+  if (value === 'ar') return window.I18n.t('set.arabic');
+  return { fr: 'Français', es: 'Español', de: 'Deutsch', tr: 'Türkçe' }[value] || value;
+}
+
+function languageCheckIcon() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'icon option-check');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '1.8');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'm5 12 4 4L19 6');
+  svg.appendChild(path);
+  return svg;
+}
+
+function renderLanguage() {
+  const valueEl = $('languageValue');
+  const current = state.language || 'system';
+  if (valueEl) valueEl.textContent = languageLabel(current);
+  const list = $('languageList');
+  if (!list) return;
+  list.innerHTML = '';
+  for (const value of LANGUAGE_VALUES) {
+    const opt = document.createElement('button');
+    opt.type = 'button';
+    opt.className = 'select-option';
+    opt.setAttribute('role', 'option');
+    opt.dataset.value = value;
+    opt.setAttribute('aria-selected', String(value === current));
+    const span = document.createElement('span');
+    span.textContent = languageLabel(value);
+    opt.appendChild(span);
+    if (value === current) opt.appendChild(languageCheckIcon());
+    opt.addEventListener('click', () => {
+      state.language = value;
+      window.I18n.setLanguage(value);
+      renderLanguage();
+      closeLanguage();
+    });
+    list.appendChild(opt);
+  }
+}
+
+function closeLanguage() {
+  const list = $('languageList');
+  if (list) list.hidden = true;
+  const btn = $('languageSelect');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+$('languageSelect').addEventListener('click', () => {
+  const list = $('languageList');
+  const open = list.hidden;
+  list.hidden = !open;
+  $('languageSelect').setAttribute('aria-expanded', String(open));
+  if (open) renderLanguage();
+});
+
+document.addEventListener('pointerdown', (e) => {
+  if (e.target && !e.target.closest('.select-wrap')) closeLanguage();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLanguage();
 });
 
 document.querySelectorAll('.opt-chip[data-lang]').forEach((btn) => {
