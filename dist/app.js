@@ -599,8 +599,11 @@ $('islandToggle').addEventListener('pointerdown', () => {
 });
 
 $('downloadBtn').addEventListener('click', startDownload);
-$('urlInput').addEventListener('input', () => {
+$('urlInput').addEventListener('input', (e) => {
   setUrlError(false);
+  const el = e.target;
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
   schedulePreview();
 });
 $('urlInput').addEventListener('keydown', (e) => {

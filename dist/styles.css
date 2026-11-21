@@ -683,13 +683,15 @@ body.drag-active::after {
   pointer-events: none;
 }
 #urlInput {
-  resize: vertical;
-  min-height: 46px;
-  max-height: 140px;
+  resize: none;
+  min-height: 62px;
+  max-height: 150px;
   line-height: 1.5;
-  padding-block: 13px;
+  padding-block: 10px;
+  overflow-y: auto;
 }
-#linkCount { color: var(--accent); font-weight: 600; }
+#linkCount { color: var(--accent); font-weight: 600; margin-top: 4px; }
+#linkHelp { font-size: 11px; color: var(--ink-muted); margin-top: 3px; }
 
 .playlist-search-wrap { position: relative; margin: 8px 0; }
 .playlist-search-wrap input { padding-inline-start: 36px; height: 38px; font-size: 12px; }

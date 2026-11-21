@@ -152,20 +152,11 @@ function renderPreview(style) {
   (previews[style] || previews.basic).forEach(([name, note], i) => {
     const row = document.createElement('div');
     row.className = 'set-preview-row';
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'icon');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('fill', 'none');
-    svg.setAttribute('stroke', 'currentColor');
-    svg.setAttribute('stroke-width', '1.8');
-    svg.setAttribute('stroke-linecap', 'round');
-    svg.setAttribute('stroke-linejoin', 'round');
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', i === 0
-      ? 'M4 5h16v14H4zM10 9l5 3-5 3V9Z'
-      : 'M9 18V5l11-2v13M6 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM17 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z');
-    svg.appendChild(path);
-    row.appendChild(svg);
+    const icon = document.createElement('img');
+    icon.className = 'icon glass-icon';
+    icon.src = i === 0 ? 'icons/video.svg' : 'icons/audio.svg';
+    icon.alt = '';
+    row.appendChild(icon);
     const copy = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = name;
