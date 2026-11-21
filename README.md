@@ -10,10 +10,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/monourar/infallora/releases/latest"><img src="https://img.shields.io/github/v/release/monourar/infallora?style=flat-square&color=7C3AED" alt="Latest release"></a>
-  <a href="https://github.com/monourar/infallora/releases"><img src="https://img.shields.io/github/downloads/monourar/infallora/total?style=flat-square&color=7C3AED" alt="Downloads"></a>
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-0078D6?style=flat-square" alt="Windows and Linux">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
+  <a href="https://github.com/monourar/infallora/releases/latest"><img src="https://img.shields.io/badge/Download-Infallora-7C3AED?style=for-the-badge&logo=download&logoColor=white" alt="Download Infallora"></a>
+  <a href="https://github.com/monourar/infallora/releases/latest"><img src="https://img.shields.io/badge/release-v0.4.5-4d43c2?style=for-the-badge&logo=github&logoColor=white" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/downloads-0-7C3AED?style=for-the-badge&logo=github&logoColor=white" alt="Downloads">
+  <img src="https://img.shields.io/badge/Windows%20%7C%20Linux-0078D6?style=for-the-badge&logo=windows&logoColor=white" alt="Windows and Linux">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License"></a>
 </p>
 
 ---
