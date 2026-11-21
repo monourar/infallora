@@ -1,76 +1,76 @@
 {
-    "$schema":  "https://schema.tauri.app/config/2",
-    "productName":  "Infallora",
-    "version":  "0.4.3",
-    "identifier":  "com.infallora.desktop",
-    "build":  {
-                  "frontendDist":  "../dist"
-              },
-    "app":  {
-                "windows":  [
-                                {
-                                    "title":  "Infallora",
-                                    "width":  800,
-                                    "height":  720,
-                                    "minWidth":  380,
-                                    "minHeight":  560,
-                                    "center":  true,
-                                    "resizable":  true,
-                                    "backgroundColor":  "#FDF7FF"
-                                }
-                            ],
-                "security":  {
-                                 "csp":  null
-                             }
-            },
-    "plugins":  {
-                    "updater":  {
-                                    "endpoints":  [
-                                                      "https://github.com/monourar/infallora/releases/latest/download/latest.json"
-                                                  ],
-                                    "pubkey":  "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNCMzA2MTAyOEQ5N0NBMDEKUldRQnlwZU5BbUV3T3dCVjBPcGFnV3ZINzhaeGk2dTArTFExUXRWaEZnNUwvT3BEQnBCU1g3WG8K",
-                                    "dialog":  false
-                                },
-                    "deep-link":  {
-                                      "desktop":  {
-                                                      "schemes":  [
-                                                                      "infallora"
-                                                                  ]
-                                                  }
-                                  }
-                },
-    "bundle":  {
-                   "active":  true,
-                   "targets":  [
-                                   "nsis"
-                               ],
-                   "createUpdaterArtifacts":  true,
-                   "icon":  [
-                                "icons/icon.ico",
-                                "icons/icon.png"
-                            ],
-                   "resources":  [
-                                     "../yt-dlp.exe",
-                                     "../ffmpeg.exe",
-                                     "../ffprobe.exe"
-                                 ],
-                   "windows":  {
-                                   "nsis":  {
-                                                "installerIcon":  "icons/icon.ico",
-                                                "uninstallerIcon":  "icons/icon.ico",
-                                                "languages":  [
-                                                                  "English",
-                                                                  "Arabic",
-                                                                  "French",
-                                                                  "Spanish",
-                                                                  "German",
-                                                                  "Turkish",
-                                                                  "PortugueseBR",
-                                                                  "Russian",
-                                                                  "SimpChinese"
-                                                              ],
-                                                "displayLanguageSelector":  true
-                                            }
-                               }
-               }
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Infallora",
+  "version": "0.4.4",
+  "identifier": "com.infallora.desktop",
+  "build": {
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Infallora",
+        "width": 800,
+        "height": 720,
+        "minWidth": 380,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "backgroundColor": "#FDF7FF"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/monourar/infallora/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNCMzA2MTAyOEQ5N0NBMDEKUldRQnlwZU5BbUV3T3dCVjBPcGFnV3ZINzhaeGk2dTArTFExUXRWaEZnNUwvT3BEQnBCU1g3WG8K",
+      "dialog": false
+    },
+    "deep-link": {
+      "desktop": {
+        "schemes": [
+          "infallora"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "createUpdaterArtifacts": true,
+    "icon": [
+      "icons/icon.ico",
+      "icons/icon.png"
+    ],
+    "resources": [
+      "../yt-dlp.exe",
+      "../ffmpeg.exe",
+      "../ffprobe.exe"
+    ],
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "languages": [
+          "English",
+          "Arabic",
+          "French",
+          "Spanish",
+          "German",
+          "Turkish",
+          "PortugueseBR",
+          "Russian",
+          "SimpChinese"
+        ],
+        "displayLanguageSelector": true
+      }
+    }
+  }
 }
