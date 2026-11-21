@@ -83,7 +83,7 @@
         <div class="field col-left">
           <label for="urlInput">Media link</label>
           <div class="input-wrap">
-            <img class="icon glass-icon" src="icons/link.svg" alt="">
+            <img class="icon glass-icon input-icon" src="icons/link.svg" alt="">
             <input id="urlInput" type="url" inputmode="url" placeholder="https://..." spellcheck="false" autocomplete="off" aria-describedby="hint">
             <button id="pasteBtn" class="input-action" type="button" aria-label="Paste link from clipboard" title="Paste link">
               <img class="icon glass-icon" src="icons/clipboard.svg" alt="">
@@ -107,6 +107,10 @@
               <button id="playlistAll" class="text-btn" type="button">all</button>
               <button id="playlistNone" class="text-btn" type="button">none</button>
             </span>
+          </div>
+          <div class="playlist-search-wrap">
+            <img class="icon glass-icon input-icon" src="icons/search.svg" alt="">
+            <input id="playlistSearch" class="set-input" type="text" data-i18n-placeholder="playlist.search" placeholder="Search videos…" spellcheck="false">
           </div>
           <div id="playlistItems" class="playlist-items"></div>
         </div>
@@ -139,7 +143,7 @@
                 aria-haspopup="listbox" aria-expanded="false" aria-controls="qualityList"
                 aria-labelledby="qualityLabel qualityValue">
                 <span id="qualityValue">Best quality</span>
-                <img class="icon glass-icon" src="icons/chevron.svg" alt="">
+                <img class="icon glass-icon chevron" src="icons/chevron.svg" alt="">
               </button>
               <div id="qualityList" class="select-popover" role="listbox" aria-labelledby="qualityLabel" hidden></div>
             </div>
@@ -151,7 +155,7 @@
                 aria-haspopup="listbox" aria-expanded="false" aria-controls="formatList"
                 aria-labelledby="formatLabel formatValue">
                 <span id="formatValue">MP4</span>
-                <img class="icon glass-icon" src="icons/chevron.svg" alt="">
+                <img class="icon glass-icon chevron" src="icons/chevron.svg" alt="">
               </button>
               <div id="formatList" class="select-popover" role="listbox" aria-labelledby="formatLabel" hidden></div>
             </div>
@@ -161,7 +165,7 @@
         <div class="field col-right">
           <label for="dirInput">Save to</label>
           <div class="input-wrap">
-            <img class="icon glass-icon" src="icons/folder.svg" alt="">
+            <img class="icon glass-icon input-icon" src="icons/folder.svg" alt="">
             <input id="dirInput" type="text" class="glass" spellcheck="false" autocomplete="off" aria-label="Save to folder">
             <button id="pickFolderBtn" class="input-action" type="button" aria-label="Choose folder" title="Choose folder">
               <img class="icon glass-icon" src="icons/folder.svg" alt="">
@@ -170,7 +174,7 @@
         </div>
 
         <button id="downloadBtn" class="primary-btn col-right" type="button">
-          <img class="icon glass-icon" src="icons/download.svg" alt="">
+          <img class="icon glass-icon btn-icon" src="icons/download.svg" alt="">
           <span class="btn-label">Download</span>
           <span class="spinner" aria-hidden="true"></span>
         </button>
@@ -258,7 +262,7 @@
                 <button id="languageSelect" class="select-trigger" type="button" role="combobox"
                   aria-haspopup="listbox" aria-expanded="false" aria-controls="languageList" aria-label="Language">
                   <span id="languageValue">system</span>
-                  <img class="icon glass-icon" src="icons/chevron.svg" alt="">
+                  <img class="icon glass-icon chevron" src="icons/chevron.svg" alt="">
                 </button>
                 <div id="languageList" class="select-popover" role="listbox" aria-label="Language" hidden></div>
               </div>
@@ -441,6 +445,11 @@
                 </button>
               </div>
               <p class="set-help">For private or members-only videos. Export cookies.txt from your logged-in browser (e.g. "Get cookies.txt LOCALLY" extension) and select it here.</p>
+            </div>
+            <div class="set-row">
+              <div class="set-row-head"><span class="set-row-label" data-i18n="set.speedLimit">speed limit</span></div>
+              <input id="speedLimit" class="set-input" type="text" data-i18n-placeholder="set.speedPlaceholder" placeholder="e.g. 5M or 500K" spellcheck="false">
+              <p class="set-help" data-i18n="set.speedHelp">Leave empty for unlimited. Example: 5M = 5 MB/s, 500K = 500 KB/s.</p>
             </div>
             <div class="set-row">
               <div class="set-row-head"><span class="set-row-label">custom yt-dlp args</span></div>

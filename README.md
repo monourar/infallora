@@ -6,7 +6,7 @@
 
 <p align="center">
   A fast, private media downloader for Windows. Liquid-glass UI, playlist support,
-  full format control, six languages, and self-updating engines.
+  full format control, nine languages, and self-updating engines.
 </p>
 
 <p align="center">
@@ -88,7 +88,7 @@ Arabic interface with automatic RTL layout:
 **Experience**
 - Liquid-glass interface with light/dark mode, seven color themes (Violet, Ocean, Ember, Mint, Rose, Slate, Amber) and reduced motion
 - Dynamic Island-style download activity with long-press expand and queue peek
-- Six languages — English, العربية, Français, Español, Deutsch, Türkçe — with RTL mirroring for Arabic
+- Nine languages — English, العربية, Français, Español, Deutsch, Türkçe, Português, Русский, 中文 — with RTL mirroring for Arabic
 - System tray: closing the window hides to tray while downloads continue
 - Native Windows notifications on completion or failure
 - Persistent download history across restarts
@@ -135,7 +135,7 @@ infallora://https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 ### Language
 
-**Settings → appearance → language** offers *system* plus all six languages. The layout mirrors automatically in Arabic; *system* follows your Windows language.
+**Settings → appearance → language** offers *system* plus all nine languages. The layout mirrors automatically in Arabic; *system* follows your Windows language.
 
 ---
 

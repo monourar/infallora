@@ -10,6 +10,7 @@
   --ink-muted: #555065;
   --accent: #4d43c2;
   --accent-hover: #3f36a8;
+  --accent-soft: rgba(77, 67, 194, .16);
   --on-accent: #ffffff;
   --glass-fill: rgba(255, 255, 255, .58);
   --glass-field: rgba(255, 255, 255, .72);
@@ -52,6 +53,7 @@
   --ink-muted: #b8b1c6;
   --accent: #aca4ff;
   --accent-hover: #c1baff;
+  --accent-soft: rgba(172, 164, 255, .18);
   --on-accent: #17142a;
   --glass-fill: rgba(35, 32, 48, .55);
   --glass-field: rgba(45, 41, 60, .74);
@@ -646,8 +648,28 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
 }
 .option-check { width: 15px; height: 15px; color: var(--accent); }
 img.icon { display: block; object-fit: contain; flex: none; }
+.item[draggable="true"] { cursor: grab; }
+.item.dragging { opacity: .45; }
+.item.drag-over { box-shadow: inset 0 2px 0 var(--accent); }
+body.drag-active::after {
+  content: "";
+  position: fixed;
+  inset: 8px;
+  z-index: 500;
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  pointer-events: none;
+}
+.playlist-search-wrap { position: relative; margin: 8px 0; }
+.playlist-search-wrap input { padding-inline-start: 36px; height: 38px; font-size: 12px; }
 html[data-theme="dark"] img.glass-icon { filter: invert(1) hue-rotate(180deg); }
 html[data-theme="dark"] img.icon:not(.glass-icon) { filter: none; }
+/* Icons sitting on an accent-colored button follow --on-accent instead of the theme */
+.primary-btn img.glass-icon,
+.preset-chip.active img.glass-icon { filter: invert(1); }
+html[data-theme="dark"] .primary-btn img.glass-icon,
+html[data-theme="dark"] .preset-chip.active img.glass-icon { filter: none; }
 
 .input-wrap { position: relative; }
 .input-wrap input { padding-inline-start: 39px; padding-inline-end: 46px; }

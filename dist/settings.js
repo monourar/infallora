@@ -23,6 +23,7 @@ const state = {
   write_thumbnail: false,
   cookies_file: '',
   extra_args: '',
+  speed_limit: '',
   auto_update: true,
   language: 'system',
   engine_auto_update: true,
@@ -198,6 +199,7 @@ function fill(settings) {
   syncLanguage(state.subtitle_lang);
   $('cookiesFile').value = state.cookies_file || '';
   $('extraArgs').value = state.extra_args || '';
+  $('speedLimit').value = state.speed_limit || '';
   applyTheme(state.theme);
   applyPalette(state.palette);
   document.documentElement.classList.toggle('reduce-motion', state.reduce_motion);
@@ -222,6 +224,7 @@ function collect() {
     saving_method: state.saving_method,
     max_concurrent: state.max_concurrent,
     extra_args: $('extraArgs').value.trim(),
+    speed_limit: $('speedLimit').value.trim(),
     auto_update: state.auto_update,
     language: state.language,
     engine_auto_update: state.engine_auto_update,
@@ -270,13 +273,16 @@ document.querySelectorAll('.set-seg [data-group]').forEach((btn) => {
   });
 });
 
-const LANGUAGE_VALUES = ['system', 'en', 'ar', 'fr', 'es', 'de', 'tr'];
+const LANGUAGE_VALUES = ['system', 'en', 'ar', 'fr', 'es', 'de', 'tr', 'pt', 'ru', 'zh'];
 
 function languageLabel(value) {
   if (value === 'system') return window.I18n.t('set.system');
   if (value === 'en') return window.I18n.t('set.english');
   if (value === 'ar') return window.I18n.t('set.arabic');
-  return { fr: 'Français', es: 'Español', de: 'Deutsch', tr: 'Türkçe' }[value] || value;
+  return {
+    fr: 'Français', es: 'Español', de: 'Deutsch', tr: 'Türkçe',
+    pt: 'Português', ru: 'Русский', zh: '中文',
+  }[value] || value;
 }
 
 function languageCheckIcon() {
@@ -406,7 +412,7 @@ $('resetBtn').addEventListener('click', () => {
   fill({
     theme: 'system', reduce_motion: false, quality: 'best', codec: 'h264', format: 'auto',
     allow_h265: false, bitrate: 'best', audio_format: 'mp3', filename_style: 'basic',
-    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system', engine_auto_update: true, palette: 'violet',
+    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', speed_limit: '', auto_update: true, language: 'system', engine_auto_update: true, palette: 'violet',
   });
   window.I18n.setLanguage('system');
   $('setStatus').textContent = window.I18n.t('set.restored');

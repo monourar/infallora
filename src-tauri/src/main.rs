@@ -78,6 +78,7 @@ pub struct AppSettings {
     language: String,
     engine_auto_update: bool,
     palette: String,
+    speed_limit: String,
 }
 
 impl Default for AppSettings {
@@ -105,6 +106,7 @@ impl Default for AppSettings {
             language: "system".into(),
             engine_auto_update: true,
             palette: "violet".into(),
+            speed_limit: String::new(),
         }
     }
 }
@@ -367,6 +369,7 @@ fn build_args(
     playlist: bool,
     extra_args: &str,
     out_dir: &str,
+    speed_limit: &str,
 ) -> Vec<String> {
     let mut args = vec![
         "--newline".to_string(),
@@ -473,6 +476,11 @@ fn build_args(
     let template = PathBuf::from(out_dir).join(name_template);
     args.push("-o".into());
     args.push(template.to_string_lossy().into_owned());
+    let limit = speed_limit.trim();
+    if !limit.is_empty() {
+        args.push("--limit-rate".into());
+        args.push(limit.to_string());
+    }
     for arg in extra_args.split_whitespace() {
         args.push(arg.to_string());
     }
@@ -574,6 +582,7 @@ fn run_download(
         playlist,
         extra_args,
         out_dir,
+        &get_settings().speed_limit,
     );
     if let Some(dir) = find_ffmpeg_dir(&ytdlp) {
         args.push("--ffmpeg-location".into());
@@ -729,6 +738,18 @@ fn get_downloads(state: State<'_, DownloadState>) -> Vec<DownloadItem> {
         .lock()
         .map(|list| list.clone())
         .unwrap_or_default()
+}
+
+#[tauri::command]
+fn reorder_downloads(state: State<'_, DownloadState>, ids: Vec<u64>) {
+    if let Ok(mut list) = state.items.lock() {
+        let mut positions: HashMap<u64, usize> = HashMap::new();
+        for (i, id) in ids.iter().enumerate() {
+            positions.insert(*id, i);
+        }
+        list.sort_by_key(|item| positions.get(&item.id).copied().unwrap_or(usize::MAX));
+        save_history(&list);
+    }
 }
 
 #[tauri::command]
@@ -1368,6 +1389,7 @@ fn main() {
             engine_versions,
             update_engine,
             notify,
+            reorder_downloads,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Infallora");

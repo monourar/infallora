@@ -198,6 +198,7 @@ function renderFormats() {
 function createItem() {
   const el = document.createElement('div');
   el.className = 'item';
+  el.draggable = true;
   el.innerHTML = `
     <div class="item-top">
       <span class="item-title"></span>
@@ -569,6 +570,46 @@ $('list').addEventListener('click', async (e) => {
   }
 });
 
+let dragId = null;
+$('list').addEventListener('dragstart', (e) => {
+  const row = e.target.closest('.item');
+  if (!row) return;
+  dragId = Number(row.dataset.id);
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', String(dragId));
+  row.classList.add('dragging');
+});
+$('list').addEventListener('dragend', (e) => {
+  e.target.closest('.item')?.classList.remove('dragging');
+  $('list').querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+  dragId = null;
+});
+$('list').addEventListener('dragover', (e) => {
+  const row = e.target.closest('.item');
+  if (!row || dragId === null) return;
+  e.preventDefault();
+  $('list').querySelectorAll('.drag-over').forEach((el) => el.classList.remove('drag-over'));
+  row.classList.add('drag-over');
+});
+$('list').addEventListener('drop', async (e) => {
+  const row = e.target.closest('.item');
+  if (!row || dragId === null) return;
+  e.preventDefault();
+  const targetId = Number(row.dataset.id);
+  if (targetId === dragId) return;
+  const ids = [...$('list').children].map((el) => Number(el.dataset.id));
+  const from = ids.indexOf(dragId);
+  const to = ids.indexOf(targetId);
+  if (from < 0 || to < 0) return;
+  ids.splice(to, 0, ids.splice(from, 1)[0]);
+  try {
+    await invoke('reorder_downloads', { ids });
+    poll();
+  } catch (err) {
+    setHint(String(err), true);
+  }
+});
+
 $('clearBtn').addEventListener('click', async () => {
   try {
     await invoke('clear_finished');
@@ -670,7 +711,18 @@ function schedulePreview() {
 function renderPlaylist() {
   const rows = $('playlistItems');
   rows.innerHTML = '';
-  playlistEntries.forEach((entry) => {
+  const query = ($('playlistSearch')?.value || '').trim().toLowerCase();
+  const visible = playlistEntries.filter((entry) =>
+    !query || (entry.title || '').toLowerCase().includes(query));
+  if (!visible.length && query) {
+    const empty = document.createElement('p');
+    empty.className = 'format-empty';
+    empty.textContent = t('playlist.noResults');
+    rows.appendChild(empty);
+    updatePlaylistCount();
+    return;
+  }
+  visible.forEach((entry) => {
     const row = document.createElement('label');
     row.className = 'playlist-item';
     const check = document.createElement('input');
@@ -789,6 +841,8 @@ $('playlistMain').addEventListener('click', () => {
     if (url) loadPlaylist(url);
   }
 });
+
+$('playlistSearch').addEventListener('input', () => renderPlaylist());
 
 $('playlistAll').addEventListener('click', () => {
   playlistSelected = new Set(playlistEntries.map((e) => e.index));
@@ -994,3 +1048,45 @@ if (internals && internals.listen) {
     window.focus();
   });
 }
+
+// ---- Drag and drop a URL from the browser ----
+document.addEventListener('dragover', (e) => {
+  if (e.dataTransfer && e.dataTransfer.types.includes('text/uri-list')) {
+    e.preventDefault();
+    document.body.classList.add('drag-active');
+  }
+});
+document.addEventListener('dragleave', (e) => {
+  if (e.target === document.documentElement) document.body.classList.remove('drag-active');
+});
+document.addEventListener('drop', (e) => {
+  e.preventDefault();
+  document.body.classList.remove('drag-active');
+  const data = e.dataTransfer;
+  if (!data) return;
+  let url = data.getData('text/uri-list') || data.getData('text/plain') || '';
+  url = url.trim().split('\n')[0].trim();
+  if (!/^https?:\/\//i.test(url)) return;
+  $('urlInput').value = url;
+  setHint(t('hint.pasted'));
+  schedulePreview();
+});
+
+// ---- Keyboard shortcuts ----
+document.addEventListener('keydown', (e) => {
+  const mod = e.ctrlKey || e.metaKey;
+  const inField = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+  if (mod && e.key.toLowerCase() === 'v' && !inField) {
+    e.preventDefault();
+    $('pasteBtn').click();
+  } else if (mod && e.key.toLowerCase() === 'd') {
+    e.preventDefault();
+    startDownload();
+  } else if (e.key === 'Escape') {
+    const overlay = $('settingsOverlay');
+    if (overlay && !overlay.hidden) {
+      overlay.hidden = true;
+      overlay.classList.remove('is-open');
+    }
+  }
+});

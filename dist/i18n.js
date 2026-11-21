@@ -27,6 +27,8 @@
     'form.chooseFolder': { en: 'Choose folder', ar: 'اختيار مجلد' },
     'form.download': { en: 'Download', ar: 'تنزيل' },
     'form.browseFormats': { en: 'Browse formats', ar: 'تصفح الصيغ' },
+    'playlist.search': { en: 'Search videos…', ar: 'ابحث في الفيديوهات…' },
+    'playlist.noResults': { en: 'No matching videos', ar: 'لا توجد فيديوهات مطابقة' },
     'form.hint': { en: 'Works with YouTube and thousands of other sites.', ar: 'يعمل مع يوتيوب وآلاف المواقع الأخرى.' },
     'mode.video': { en: 'Video', ar: 'فيديو' },
     'mode.audio': { en: 'Audio', ar: 'صوت' },
@@ -160,6 +162,9 @@
     'set.chooseCookies': { en: 'Choose cookies file', ar: 'اختيار ملف الكوكيز' },
     'set.cookiesHelp': { en: 'For private or members-only videos. Export cookies.txt from your logged-in browser (e.g. "Get cookies.txt LOCALLY" extension) and select it here.', ar: 'للفيديوهات الخاصة أو الحصرية للأعضاء. صدّر cookies.txt من متصفحك بعد تسجيل الدخول (مثل إضافة "Get cookies.txt LOCALLY") واختره هنا.' },
     'set.extraArgs': { en: 'custom yt-dlp args', ar: 'وسائط yt-dlp مخصصة' },
+    'set.speedLimit': { en: 'speed limit', ar: 'حد السرعة' },
+    'set.speedPlaceholder': { en: 'e.g. 5M or 500K', ar: 'مثال: 5M أو 500K' },
+    'set.speedHelp': { en: 'Leave empty for unlimited. Example: 5M = 5 MB/s, 500K = 500 KB/s.', ar: 'اتركه فارغًا لعدم الحد. مثال: 5M = 5 ميغابايت/ث، 500K = 500 كيلوبايت/ث.' },
     'set.concurrent': { en: 'max concurrent downloads', ar: 'أقصى عدد تنزيلات متزامنة' },
 
     // settings updates
@@ -221,7 +226,7 @@
   function resolve() {
     if (lang === 'system') {
       const sys = (navigator.language || 'en').toLowerCase();
-      for (const code of ['ar', 'fr', 'es', 'de', 'tr']) {
+      for (const code of ['ar', 'fr', 'es', 'de', 'tr', 'pt', 'ru', 'zh']) {
         if (sys.startsWith(code)) return code;
       }
       return 'en';
