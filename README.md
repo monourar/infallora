@@ -52,10 +52,10 @@
 Get the latest installer from **[Releases](https://github.com/monourar/infallora/releases/latest)**.
 
 1. Download `Infallora_x.x.x_x64-setup.exe`.
-2. Run it. If Windows SmartScreen appears, click **More info â†’ Run anyway** â€” the installer is unsigned (see [FAQ](#faq)).
+2. Run it. If Windows SmartScreen appears, click **More info → Run anyway** — the installer is unsigned (see [FAQ](#faq)).
 3. Open Infallora and paste a link.
 
-Updates are checked on startup, or manually in **Settings â†’ updates**. The app and its yt-dlp engine both update themselves.
+Updates are checked on startup, or manually in **Settings → updates**. The app and its yt-dlp engine both update themselves.
 
 > Requires **Windows 10/11** with [WebView2](https://developer.microsoft.com/microsoft-edge/webview2/) (preinstalled on most systems).
 
@@ -88,7 +88,7 @@ Arabic interface with automatic RTL layout:
 **Experience**
 - Liquid-glass interface with light/dark themes and reduced motion
 - Dynamic Island-style download activity with long-press expand and queue peek
-- Six languages â€” English, Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©, FranÃ§ais, EspaÃ±ol, Deutsch, TÃ¼rkÃ§e â€” with RTL mirroring for Arabic
+- Six languages — English, العربية, Français, Español, Deutsch, Türkçe — with RTL mirroring for Arabic
 - System tray: closing the window hides to tray while downloads continue
 - Native Windows notifications on completion or failure
 - Persistent download history across restarts
@@ -99,7 +99,7 @@ Arabic interface with automatic RTL layout:
 - Automatic yt-dlp updates on startup, plus an on-demand button
 - `infallora://<url>` deep links for browser integration
 - Automatic `cookies.txt` detection for private content
-- No account, telemetry, upload or cloud â€” everything runs locally
+- No account, telemetry, upload or cloud — everything runs locally
 
 ---
 
@@ -113,7 +113,7 @@ Use **Browse formats** for per-format details before downloading.
 
 ### Playlists
 
-Paste a playlist link and Infallora lists every entry with thumbnail and duration. Use **all** / **none** or tick individual videos, then press **Download** â€” only selected videos are queued.
+Paste a playlist link and Infallora lists every entry with thumbnail and duration. Use **all** / **none** or tick individual videos, then press **Download** — only selected videos are queued.
 
 ### Private or members-only videos
 
@@ -121,9 +121,9 @@ Public videos need no setup. For restricted content:
 
 1. Install the **Get cookies.txt LOCALLY** browser extension.
 2. While signed in, export cookies as `cookies.txt`.
-3. Place the file **next to `Infallora.exe`** (auto-detected), or select it in **Settings â†’ advanced â†’ cookies file**.
+3. Place the file **next to `Infallora.exe`** (auto-detected), or select it in **Settings → advanced → cookies file**.
 
-Infallora cannot bypass authentication â€” it only accesses content your browser session can already reach.
+Infallora cannot bypass authentication — it only accesses content your browser session can already reach.
 
 ### Browser links
 
@@ -135,7 +135,7 @@ infallora://https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 ### Language
 
-**Settings â†’ appearance â†’ language** offers *system* plus all six languages. The layout mirrors automatically in Arabic; *system* follows your Windows language.
+**Settings → appearance → language** offers *system* plus all six languages. The layout mirrors automatically in Arabic; *system* follows your Windows language.
 
 ---
 
@@ -217,16 +217,16 @@ Built with <img src="docs/icons/rust.svg" alt="Rust" width="14"> **Rust** and <i
 ## FAQ
 
 <img src="docs/icons/windows.svg" alt="" width="16"> **Why does Windows warn about the installer?**
-Infallora is not code-signed, so SmartScreen warns for any unsigned app. Verify you downloaded from this repository's Releases page, then click **More info â†’ Run anyway**. The *update manifest* is signed, so future updates verify automatically.
+Infallora is not code-signed, so SmartScreen warns for any unsigned app. Verify you downloaded from this repository's Releases page, then click **More info → Run anyway**. The *update manifest* is signed, so future updates verify automatically.
 
 **Where did the window go?**
-Closing the window hides Infallora to the system tray â€” downloads keep running. Click the tray icon or choose **Show** from its menu to restore. Choose **Quit** to exit.
+Closing the window hides Infallora to the system tray — downloads keep running. Click the tray icon or choose **Show** from its menu to restore. Choose **Quit** to exit.
 
 <img src="docs/icons/youtube.svg" alt="" width="16"> **Why does a video fail with 403?**
-YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, the video is usually account-restricted â€” add a cookies file.
+YouTube's CDN sometimes rejects a stream token. Infallora retries up to three times with a short backoff. If it still fails, the video is usually account-restricted — add a cookies file.
 
 **Do I need to update yt-dlp myself?**
-No. It updates automatically on startup. You can also run **Settings â†’ updates â†’ engines â†’ update yt-dlp** at any time. Change *update engines on startup* to *off* to disable this.
+No. It updates automatically on startup. You can also run **Settings → updates → engines → update yt-dlp** at any time. Change *update engines on startup* to *off* to disable this.
 
 **Does it work offline?**
 No. Downloads and update checks need a connection, but settings and files stay local.
@@ -244,7 +244,7 @@ Issues and pull requests are welcome. For a new translation, add a language tabl
 
 ## License
 
-Infallora's source is [MIT licensed](LICENSE). Release bundles include third-party engines with their own licenses â€” see [NOTICE.md](NOTICE.md) and the bundled `LICENSE-GPLv3.txt`. Respect the terms of service of sites you use and the rights of creators.
+Infallora's source is [MIT licensed](LICENSE). Release bundles include third-party engines with their own licenses — see [NOTICE.md](NOTICE.md) and the bundled `LICENSE-GPLv3.txt`. Respect the terms of service of sites you use and the rights of creators.
 
 ---
 
@@ -252,10 +252,10 @@ Infallora's source is [MIT licensed](LICENSE). Release bundles include third-par
 
 | | |
 |:---:|---|
-| <img src="docs/icons/github.svg" alt="" width="18"> | [Download](https://github.com/monourar/infallora/releases/latest) Â· [Report an issue](https://github.com/monourar/infallora/issues) Â· [Release process](RELEASING.md) Â· [Licensing notice](NOTICE.md) |
-| <img src="docs/icons/discord.svg" alt="" width="18"> | Discord community â€” *coming soon* |
-| <img src="docs/icons/telegram.svg" alt="" width="18"> | Telegram channel â€” *coming soon* |
+| <img src="docs/icons/github.svg" alt="" width="18"> | [Download](https://github.com/monourar/infallora/releases/latest) · [Report an issue](https://github.com/monourar/infallora/issues) · [Release process](RELEASING.md) · [Licensing notice](NOTICE.md) |
+| <img src="docs/icons/discord.svg" alt="" width="18"> | Discord community — *coming soon* |
+| <img src="docs/icons/telegram.svg" alt="" width="18"> | Telegram channel — *coming soon* |
 
 <p align="center">
-  <sub>Made with <img src="docs/icons/rust.svg" alt="Rust" width="11"> Rust and <img src="docs/icons/tauri.svg" alt="Tauri" width="12"> Tauri Â· Icons by <a href="https://thesvg.org">theSVG</a></sub>
+  <sub>Made with <img src="docs/icons/rust.svg" alt="Rust" width="11"> Rust and <img src="docs/icons/tauri.svg" alt="Tauri" width="12"> Tauri · Icons by <a href="https://thesvg.org">theSVG</a></sub>
 </p>
