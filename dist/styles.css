@@ -77,6 +77,86 @@
   --danger-soft: rgba(255, 110, 110, .14);
 }
 
+/* ---------- Color palettes (layered over light/dark) ---------- */
+[data-palette="ocean"] {
+  --accent: #0b7285; --accent-hover: #095c6b; --on-accent: #ffffff;
+  --blob-a: rgba(34, 176, 214, .40); --blob-b: rgba(86, 132, 255, .28); --blob-c: rgba(94, 224, 210, .30);
+  --ring-a: rgba(34, 176, 214, .22); --ring-b: rgba(86, 132, 255, .18);
+  --chromatic-a: rgba(40, 180, 220, .16); --chromatic-b: rgba(110, 150, 255, .14);
+  --accent-shadow: 0 8px 22px rgba(11, 114, 133, .28);
+  --accent-shadow-hover: 0 12px 28px rgba(11, 114, 133, .34);
+}
+[data-palette="ocean"][data-theme="dark"] {
+  --accent: #67d6ef; --accent-hover: #8ee4f6; --on-accent: #06232b;
+  --blob-a: rgba(30, 150, 190, .30); --blob-b: rgba(70, 110, 230, .20); --blob-c: rgba(50, 200, 190, .20);
+  --ring-a: rgba(80, 200, 235, .18); --ring-b: rgba(110, 150, 255, .14);
+}
+[data-palette="ember"] {
+  --accent: #b5431d; --accent-hover: #963518; --on-accent: #ffffff;
+  --blob-a: rgba(255, 138, 76, .40); --blob-b: rgba(255, 92, 92, .26); --blob-c: rgba(255, 196, 92, .30);
+  --ring-a: rgba(255, 140, 80, .22); --ring-b: rgba(255, 100, 100, .18);
+  --chromatic-a: rgba(255, 130, 70, .16); --chromatic-b: rgba(255, 190, 90, .14);
+  --accent-shadow: 0 8px 22px rgba(181, 67, 29, .30);
+  --accent-shadow-hover: 0 12px 28px rgba(181, 67, 29, .36);
+}
+[data-palette="ember"][data-theme="dark"] {
+  --accent: #ff9d6b; --accent-hover: #ffb489; --on-accent: #2a1006;
+  --blob-a: rgba(230, 110, 50, .30); --blob-b: rgba(220, 70, 70, .20); --blob-c: rgba(230, 170, 60, .20);
+  --ring-a: rgba(255, 150, 90, .18); --ring-b: rgba(255, 110, 110, .14);
+}
+[data-palette="mint"] {
+  --accent: #127a55; --accent-hover: #0e6345; --on-accent: #ffffff;
+  --blob-a: rgba(60, 205, 145, .38); --blob-b: rgba(120, 200, 255, .26); --blob-c: rgba(180, 235, 140, .30);
+  --ring-a: rgba(60, 205, 145, .22); --ring-b: rgba(120, 200, 255, .18);
+  --chromatic-a: rgba(50, 200, 140, .16); --chromatic-b: rgba(150, 220, 130, .14);
+  --accent-shadow: 0 8px 22px rgba(18, 122, 85, .28);
+  --accent-shadow-hover: 0 12px 28px rgba(18, 122, 85, .34);
+}
+[data-palette="mint"][data-theme="dark"] {
+  --accent: #79e2ac; --accent-hover: #9cefc3; --on-accent: #06271a;
+  --blob-a: rgba(50, 180, 125, .28); --blob-b: rgba(80, 160, 220, .18); --blob-c: rgba(150, 220, 110, .18);
+  --ring-a: rgba(100, 220, 160, .18); --ring-b: rgba(120, 200, 255, .14);
+}
+[data-palette="rose"] {
+  --accent: #b02a6a; --accent-hover: #922257; --on-accent: #ffffff;
+  --blob-a: rgba(255, 130, 185, .40); --blob-b: rgba(190, 140, 255, .28); --blob-c: rgba(255, 180, 200, .30);
+  --ring-a: rgba(255, 140, 190, .22); --ring-b: rgba(190, 140, 255, .18);
+  --chromatic-a: rgba(255, 130, 190, .16); --chromatic-b: rgba(190, 140, 255, .14);
+  --accent-shadow: 0 8px 22px rgba(176, 42, 106, .30);
+  --accent-shadow-hover: 0 12px 28px rgba(176, 42, 106, .36);
+}
+[data-palette="rose"][data-theme="dark"] {
+  --accent: #ff9cc8; --accent-hover: #ffb8d8; --on-accent: #2a0a1c;
+  --blob-a: rgba(220, 90, 150, .30); --blob-b: rgba(160, 100, 230, .20); --blob-c: rgba(230, 130, 170, .20);
+  --ring-a: rgba(255, 140, 190, .18); --ring-b: rgba(190, 140, 255, .14);
+}
+[data-palette="slate"] {
+  --accent: #3f4b5b; --accent-hover: #313b48; --on-accent: #ffffff;
+  --blob-a: rgba(130, 145, 165, .32); --blob-b: rgba(160, 170, 185, .24); --blob-c: rgba(185, 195, 210, .28);
+  --ring-a: rgba(130, 145, 165, .20); --ring-b: rgba(160, 170, 185, .16);
+  --chromatic-a: rgba(130, 145, 165, .12); --chromatic-b: rgba(170, 180, 195, .10);
+  --accent-shadow: 0 8px 22px rgba(63, 75, 91, .26);
+  --accent-shadow-hover: 0 12px 28px rgba(63, 75, 91, .32);
+}
+[data-palette="slate"][data-theme="dark"] {
+  --accent: #b9c4d2; --accent-hover: #d2dae4; --on-accent: #141a22;
+  --blob-a: rgba(110, 125, 145, .26); --blob-b: rgba(140, 150, 170, .18); --blob-c: rgba(160, 170, 190, .18);
+  --ring-a: rgba(160, 175, 195, .16); --ring-b: rgba(140, 150, 170, .12);
+}
+[data-palette="amber"] {
+  --accent: #9a6708; --accent-hover: #7e5406; --on-accent: #ffffff;
+  --blob-a: rgba(245, 190, 80, .40); --blob-b: rgba(255, 150, 90, .28); --blob-c: rgba(230, 215, 120, .30);
+  --ring-a: rgba(245, 190, 80, .22); --ring-b: rgba(255, 150, 90, .18);
+  --chromatic-a: rgba(245, 190, 80, .16); --chromatic-b: rgba(255, 150, 90, .14);
+  --accent-shadow: 0 8px 22px rgba(154, 103, 8, .28);
+  --accent-shadow-hover: 0 12px 28px rgba(154, 103, 8, .34);
+}
+[data-palette="amber"][data-theme="dark"] {
+  --accent: #f0c268; --accent-hover: #f7d48f; --on-accent: #2a1e05;
+  --blob-a: rgba(220, 165, 55, .28); --blob-b: rgba(230, 120, 60, .20); --blob-c: rgba(210, 195, 80, .20);
+  --ring-a: rgba(245, 190, 80, .18); --ring-b: rgba(255, 150, 90, .14);
+}
+
 * { box-sizing: border-box; }
 
 html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -117,12 +197,18 @@ input, select { caret-color: var(--accent); }
   inherits: false;
   initial-value: 22px;
 }
+@property --shine {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
 
 .glass {
   --blur: 22px;
   --px: 50%;
   --py: 0%;
-  transition: --blur var(--motion);
+  --shine: 1;
+  transition: --blur var(--motion), --shine var(--motion);
   position: relative;
   background: var(--glass-fill);
   -webkit-backdrop-filter: blur(var(--blur)) saturate(175%);
@@ -139,11 +225,13 @@ input, select { caret-color: var(--accent); }
 }
 .glass::before {
   background:
-    radial-gradient(220px circle at var(--px) var(--py), var(--glass-shine), transparent 62%),
+    radial-gradient(220px circle at var(--px) var(--py),
+      color-mix(in srgb, var(--glass-shine) calc(var(--shine) * 100%), transparent), transparent 62%),
     linear-gradient(180deg, var(--glass-shine), transparent 46%);
   opacity: .9;
   transition: opacity var(--motion);
 }
+.glass.is-idle { --shine: 0; }
 .glass::after {
   background: linear-gradient(118deg, var(--chromatic-a), transparent 38%, transparent 62%, var(--chromatic-b));
   opacity: .8;
@@ -557,6 +645,9 @@ input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--danger), var(--glass-sh
   transform: scale(1.012);
 }
 .option-check { width: 15px; height: 15px; color: var(--accent); }
+img.icon { display: block; object-fit: contain; flex: none; }
+html[data-theme="dark"] img.glass-icon { filter: invert(1) hue-rotate(180deg); }
+html[data-theme="dark"] img.icon:not(.glass-icon) { filter: none; }
 
 .input-wrap { position: relative; }
 .input-wrap input { padding-inline-start: 39px; padding-inline-end: 46px; }

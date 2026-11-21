@@ -86,7 +86,7 @@ Arabic interface with automatic RTL layout:
 - Automatic retry on transient HTTP 403 errors
 
 **Experience**
-- Liquid-glass interface with light/dark themes and reduced motion
+- Liquid-glass interface with light/dark mode, seven color themes (Violet, Ocean, Ember, Mint, Rose, Slate, Amber) and reduced motion
 - Dynamic Island-style download activity with long-press expand and queue peek
 - Six languages — English, العربية, Français, Español, Deutsch, Türkçe — with RTL mirroring for Arabic
 - System tray: closing the window hides to tray while downloads continue

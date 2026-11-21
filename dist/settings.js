@@ -26,6 +26,7 @@ const state = {
   auto_update: true,
   language: 'system',
   engine_auto_update: true,
+  palette: 'violet',
 };
 
 function applyTheme(theme) {
@@ -33,6 +34,81 @@ function applyTheme(theme) {
     ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     : theme;
   document.documentElement.dataset.theme = next;
+}
+
+const PALETTES = [
+  ['violet', '#7C3AED'],
+  ['ocean', '#0B7285'],
+  ['ember', '#B5431D'],
+  ['mint', '#127A55'],
+  ['rose', '#B02A6A'],
+  ['slate', '#3F4B5B'],
+  ['amber', '#9A6708'],
+];
+
+function applyPalette(palette) {
+  document.documentElement.dataset.palette = palette || 'violet';
+}
+
+function renderPalettes() {
+  const valueEl = $('paletteValue');
+  const current = state.palette || 'violet';
+  const found = PALETTES.find(([k]) => k === current);
+  if (valueEl) valueEl.textContent = found ? found[0].charAt(0).toUpperCase() + found[0].slice(1) : 'Violet';
+  const swatches = $('paletteSwatches');
+  if (swatches) {
+    swatches.innerHTML = '';
+    for (const [key, color] of PALETTES) {
+      const s = document.createElement('button');
+      s.type = 'button';
+      s.className = 'palette-swatch' + (key === current ? ' active' : '');
+      s.style.setProperty('--swatch', color);
+      s.setAttribute('aria-label', key);
+      s.addEventListener('click', () => {
+        state.palette = key;
+        applyPalette(key);
+        renderPalettes();
+        renderPaletteList();
+      });
+      swatches.appendChild(s);
+    }
+  }
+  renderPaletteList();
+}
+
+function renderPaletteList() {
+  const list = $('paletteList');
+  if (!list) return;
+  const current = state.palette || 'violet';
+  list.innerHTML = '';
+  for (const [key, color] of PALETTES) {
+    const opt = document.createElement('button');
+    opt.type = 'button';
+    opt.className = 'select-option';
+    opt.setAttribute('role', 'option');
+    opt.dataset.value = key;
+    opt.setAttribute('aria-selected', String(key === current));
+    const label = document.createElement('span');
+    label.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+    const dot = document.createElement('i');
+    dot.className = 'palette-dot';
+    dot.style.background = color;
+    opt.append(label, dot);
+    opt.addEventListener('click', () => {
+      state.palette = key;
+      applyPalette(key);
+      renderPalettes();
+      closePalette();
+    });
+    list.appendChild(opt);
+  }
+}
+
+function closePalette() {
+  const list = $('paletteList');
+  if (list) list.hidden = true;
+  const btn = $('paletteSelect');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
 }
 
 function setSeg(group, value) {
@@ -113,6 +189,7 @@ function fill(settings) {
   setSeg('autoUpdate', state.auto_update ? 'on' : 'off');
   setSeg('engineUpdate', state.engine_auto_update ? 'on' : 'off');
   renderLanguage();
+  renderPalettes();
   setToggle('reduceMotion', state.reduce_motion);
   setToggle('h265', state.allow_h265);
   setToggle('metadata', state.metadata);
@@ -122,6 +199,7 @@ function fill(settings) {
   $('cookiesFile').value = state.cookies_file || '';
   $('extraArgs').value = state.extra_args || '';
   applyTheme(state.theme);
+  applyPalette(state.palette);
   document.documentElement.classList.toggle('reduce-motion', state.reduce_motion);
   renderPreview(state.filename_style);
 }
@@ -147,6 +225,7 @@ function collect() {
     auto_update: state.auto_update,
     language: state.language,
     engine_auto_update: state.engine_auto_update,
+    palette: state.palette,
   };
 }
 
@@ -201,18 +280,11 @@ function languageLabel(value) {
 }
 
 function languageCheckIcon() {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'icon option-check');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '1.8');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', 'm5 12 4 4L19 6');
-  svg.appendChild(path);
-  return svg;
+  const img = document.createElement('img');
+  img.className = 'icon option-check';
+  img.src = 'icons/check.svg';
+  img.alt = '';
+  return img;
 }
 
 function renderLanguage() {
@@ -258,11 +330,22 @@ $('languageSelect').addEventListener('click', () => {
   if (open) renderLanguage();
 });
 
+$('paletteSelect').addEventListener('click', () => {
+  const list = $('paletteList');
+  const open = list.hidden;
+  list.hidden = !open;
+  $('paletteSelect').setAttribute('aria-expanded', String(open));
+  if (open) renderPaletteList();
+});
+
 document.addEventListener('pointerdown', (e) => {
-  if (e.target && !e.target.closest('.select-wrap')) closeLanguage();
+  if (e.target && !e.target.closest('.select-wrap')) {
+    closeLanguage();
+    closePalette();
+  }
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeLanguage();
+  if (e.key === 'Escape') { closeLanguage(); closePalette(); }
 });
 
 document.querySelectorAll('.opt-chip[data-lang]').forEach((btn) => {
@@ -323,7 +406,7 @@ $('resetBtn').addEventListener('click', () => {
   fill({
     theme: 'system', reduce_motion: false, quality: 'best', codec: 'h264', format: 'auto',
     allow_h265: false, bitrate: 'best', audio_format: 'mp3', filename_style: 'basic',
-    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system', engine_auto_update: true,
+    metadata: true, write_thumbnail: false, cookies_file: '', subtitle_lang: '', saving_method: 'download', max_concurrent: 3, extra_args: '', auto_update: true, language: 'system', engine_auto_update: true, palette: 'violet',
   });
   window.I18n.setLanguage('system');
   $('setStatus').textContent = window.I18n.t('set.restored');
@@ -334,6 +417,7 @@ $('resetBtn').addEventListener('click', () => {
     const settings = await invoke('get_settings');
     fill(settings || state);
     if (settings && settings.language) window.I18n.setLanguage(settings.language);
+    if (settings && settings.palette) applyPalette(settings.palette);
   } catch (_) {
     fill(state);
   }

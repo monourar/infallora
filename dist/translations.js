@@ -168,7 +168,9 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineCurrentAlready": "Déjà à jour.",
     "set.engineFailed": "Échec de la mise à jour : {e}",
     "set.engineBusy": "Terminez d'abord les téléchargements actifs.",
-    "action.openFolder": "Ouvrir le dossier"
+    "action.openFolder": "Ouvrir le dossier",
+    "set.mode": "mode",
+    "set.palette": "thème de couleur"
   },
   "es": {
     "app.subtitle": "Descargador de vídeos y audio",
@@ -339,7 +341,9 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineCurrentAlready": "Ya está actualizado.",
     "set.engineFailed": "Error al actualizar: {e}",
     "set.engineBusy": "Termina primero las descargas activas.",
-    "action.openFolder": "Abrir carpeta"
+    "action.openFolder": "Abrir carpeta",
+    "set.mode": "modo",
+    "set.palette": "tema de color"
   },
   "de": {
     "app.subtitle": "Video- und Audio-Downloader",
@@ -510,7 +514,9 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineCurrentAlready": "Bereits aktuell.",
     "set.engineFailed": "Update fehlgeschlagen: {e}",
     "set.engineBusy": "Zuerst aktive Downloads beenden.",
-    "action.openFolder": "Ordner öffnen"
+    "action.openFolder": "Ordner öffnen",
+    "set.mode": "Modus",
+    "set.palette": "Farbschema"
   },
   "tr": {
     "app.subtitle": "Video ve ses indirici",
@@ -681,6 +687,8 @@ window.INFALLORA_TRANSLATIONS = {
     "set.engineCurrentAlready": "Zaten güncel.",
     "set.engineFailed": "Güncelleme başarısız: {e}",
     "set.engineBusy": "Önce aktif indirmeleri bitirin.",
-    "action.openFolder": "Klasörü aç"
+    "action.openFolder": "Klasörü aç",
+    "set.mode": "mod",
+    "set.palette": "renk teması"
   }
 };

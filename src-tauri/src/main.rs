@@ -77,6 +77,7 @@ pub struct AppSettings {
     auto_update: bool,
     language: String,
     engine_auto_update: bool,
+    palette: String,
 }
 
 impl Default for AppSettings {
@@ -103,6 +104,7 @@ impl Default for AppSettings {
             auto_update: true,
             language: "system".into(),
             engine_auto_update: true,
+            palette: "violet".into(),
         }
     }
 }

@@ -1,6 +1,6 @@
 /* Infallora localization. Exposes window.I18n with t(), apply(), setLanguage(). */
 (() => {
-  const VERSION = window.INFALLORA_VERSION || '0.3.0';
+  const VERSION = window.INFALLORA_VERSION || '0.3.1';
   const DICT = {
     // app / header
     'app.subtitle': { en: 'Video and audio downloader', ar: 'مُحمِّل الفيديو والصوت' },
@@ -106,6 +106,8 @@
 
     // settings appearance
     'set.theme': { en: 'theme', ar: 'السمة' },
+    'set.mode': { en: 'mode', ar: 'الوضع' },
+    'set.palette': { en: 'color theme', ar: 'سمة اللون' },
     'set.light': { en: 'light', ar: 'فاتح' },
     'set.dark': { en: 'dark', ar: 'داكن' },
     'set.reduceMotion': { en: 'reduce motion', ar: 'تقليل الحركة' },

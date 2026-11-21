@@ -85,36 +85,20 @@ function labelFor(options, value) {
   return match ? window.I18n.translateText(match[1]) : value;
 }
 
+function glassIcon(name, cls) {
+  const img = document.createElement('img');
+  img.className = cls || 'icon';
+  img.src = `icons/${name}.svg`;
+  img.alt = '';
+  return img;
+}
+
 function formatIcon(kind) {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'icon');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '1.8');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', kind === 'audio'
-    ? 'M9 18V5l11-2v13M6 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM17 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'
-    : 'M4 5h16v14H4zM10 9l5 3-5 3V9Z');
-  svg.appendChild(path);
-  return svg;
+  return glassIcon(kind === 'audio' ? 'audio' : 'video');
 }
 
 function checkIcon() {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'icon option-check');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '1.8');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', 'm5 12 4 4L19 6');
-  svg.appendChild(path);
-  return svg;
+  return glassIcon('check', 'icon option-check');
 }
 
 function fillSelect(spec) {
@@ -937,6 +921,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.addEventListener('pointermove', (e) => {
     const el = e.target.closest && e.target.closest('.glass, .item');
     if (!el) return;
+    el.classList.remove('is-idle');
     const r = el.getBoundingClientRect();
     el.style.setProperty('--px', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
     el.style.setProperty('--py', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
@@ -944,8 +929,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.addEventListener('pointerout', (e) => {
     const el = e.target.closest && e.target.closest('.glass, .item');
     if (el && !el.contains(e.relatedTarget)) {
-      el.style.setProperty('--px', '50%');
-      el.style.setProperty('--py', '0%');
+      el.classList.add('is-idle');
     }
   });
 }
@@ -953,6 +937,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
 (async function init() {
   const saved = localStorage.getItem('infallora-theme');
   applyTheme(saved === 'dark' || saved === 'light' ? saved : 'light');
+  document.documentElement.dataset.palette = 'violet';
   renderQuality();
   renderFormats();
   try {
@@ -965,6 +950,7 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const s = await invoke('get_settings');
     storedTheme = s && s.theme ? s.theme : null;
     if (s && (s.theme === 'light' || s.theme === 'dark')) applyTheme(s.theme);
+    if (s && s.palette) document.documentElement.dataset.palette = s.palette;
     if (s && s.download_dir) $('dirInput').value = s.download_dir;
     if (s && s.quality) { qualityValue = s.quality; $('qualityValue').textContent = labelFor(QUALITY_OPTIONS[mode], qualityValue); }
     if (s && s.format) { formatValue = s.format; $('formatValue').textContent = labelFor(FORMAT_OPTIONS, formatValue); }
